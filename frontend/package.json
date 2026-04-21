@@ -13,9 +13,11 @@
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.15.0",
     "bootstrap": "^5.3.8",
+    "bootstrap-icons": "^1.13.1",
     "formik": "^2.4.9",
     "react": "^19.2.4",
     "react-bootstrap": "^2.10.10",
+    "react-bootstrap-icons": "^1.11.6",
     "react-dom": "^19.2.4",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.14.1"

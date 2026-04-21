@@ -1,43 +1,90 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Login from './components/Login';
 import NotFound from './components/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 import { logout } from './store/authSlice';
-import { Container, Navbar, Nav, Button } from 'react-bootstrap';
+import { setChannels, setLoading as setChannelsLoading } from './slices/channelsSlice';
+import { setMessages, setLoading as setMessagesLoading } from './slices/messagesSlice';
+import { channelsAPI, messagesAPI } from './services/api';
+import ChannelList from './components/chat/ChannelList';
+import MessageList from './components/chat/MessageList';
+import MessageForm from './components/chat/MessageForm';
+import { Container, Row, Col, Navbar, Nav, Button, Spinner } from 'react-bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
-const Chat = () => {
+const ChatPage = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  
-  const handleLogout = () => {
-    dispatch(logout());
-  };
-  
+  const { loading: channelsLoading } = useSelector((state) => state.channels);
+  const { loading: messagesLoading } = useSelector((state) => state.messages);
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      const loadData = async () => {
+        try {
+          dispatch(setChannelsLoading(true));
+          dispatch(setMessagesLoading(true));
+          
+          const [channelsRes, messagesRes] = await Promise.all([
+            channelsAPI.getChannels(),
+            messagesAPI.getMessages(),
+          ]);
+          
+          dispatch(setChannels(channelsRes.data));
+          dispatch(setMessages(messagesRes.data));
+        } catch (error) {
+          console.error('Failed to load data:', error);
+          if (error.response?.status === 401) {
+            dispatch(logout());
+          }
+        } finally {
+          dispatch(setChannelsLoading(false));
+          dispatch(setMessagesLoading(false));
+        }
+      };
+      
+      loadData();
+    }
+  }, [isAuthenticated, dispatch]);
+
+  if (channelsLoading || messagesLoading) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <Spinner animation="border" variant="primary" />
+      </div>
+    );
+  }
+
   return (
     <>
       <Navbar bg="dark" variant="dark">
-        <Container>
+        <Container fluid>
           <Navbar.Brand>Чат</Navbar.Brand>
-          <Nav className="ms-auto">
-            {isAuthenticated && (
-              <Button variant="outline-light" onClick={handleLogout}>
-                Выйти
-              </Button>
-            )}
+          <Nav>
+            <Button variant="outline-light" onClick={() => dispatch(logout())}>
+              Выйти
+            </Button>
           </Nav>
         </Container>
       </Navbar>
-      <Container className="mt-4">
-        <h1>Добро пожаловать в чат!</h1>
-        <p>Здесь будет ваш чат</p>
+      <Container fluid className="h-100">
+        <Row className="h-100">
+          <Col md={3} className="bg-light border-end p-0" style={{ height: 'calc(100vh - 56px)' }}>
+            <ChannelList />
+          </Col>
+          <Col md={9} className="p-0 d-flex flex-column" style={{ height: 'calc(100vh - 56px)' }}>
+            <MessageList />
+            <MessageForm />
+          </Col>
+        </Row>
       </Container>
     </>
   );
 };
 
 function App() {
-  
   return (
     <BrowserRouter>
       <Routes>
@@ -45,7 +92,7 @@ function App() {
           path="/"
           element={
             <ProtectedRoute>
-              <Chat />
+              <ChatPage />
             </ProtectedRoute>
           }
         />
