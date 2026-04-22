@@ -4,6 +4,7 @@ const initialState = {
   messages: [],
   loading: false,
   error: null,
+  isConnected: false,
 };
 
 const messagesSlice = createSlice({
@@ -22,8 +23,22 @@ const messagesSlice = createSlice({
     setError: (state, action) => {
       state.error = action.payload;
     },
+    setConnectionStatus: (state, action) => {
+      state.isConnected = action.payload;
+    },
+    clearMessages: (state) => {
+      state.messages = [];
+    },
   },
 });
 
-export const { setMessages, addMessage, setLoading, setError } = messagesSlice.actions;
+export const { 
+  setMessages, 
+  addMessage, 
+  setLoading, 
+  setError, 
+  setConnectionStatus,
+  clearMessages,
+} = messagesSlice.actions;
+
 export default messagesSlice.reducer;
