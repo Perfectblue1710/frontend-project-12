@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { initSocket, getSocket, closeSocket } from '../services/socket';
+import { initSocket, closeSocket } from '../services/socket';
 import { addMessage, setConnectionStatus } from '../slices/messagesSlice';
-import { addChannel, removeChannel, renameChannel } from '../slices/channelsSlice';
+import { addChannel, removeChannel, renameChannelWS } from '../slices/channelsSlice';
 
 export const useWebSocket = () => {
   const dispatch = useDispatch();
@@ -18,43 +18,45 @@ export const useWebSocket = () => {
       return;
     }
 
+    console.log('Initializing WebSocket with token:', token);
+    
     // Инициализируем сокет
     const socket = initSocket(token);
     socketRef.current = socket;
 
     // Обработчики событий
     socket.on('connect', () => {
-      console.log('WebSocket connected');
+      console.log('✅ WebSocket connected');
       dispatch(setConnectionStatus(true));
     });
 
-    socket.on('disconnect', () => {
-      console.log('WebSocket disconnected');
+    socket.on('disconnect', (reason) => {
+      console.log('❌ WebSocket disconnected:', reason);
       dispatch(setConnectionStatus(false));
     });
 
     socket.on('newMessage', (message) => {
-      console.log('New message received:', message);
+      console.log('📨 New message received:', message);
       dispatch(addMessage(message));
     });
 
     socket.on('newChannel', (channel) => {
-      console.log('New channel created:', channel);
+      console.log('➕ New channel created:', channel);
       dispatch(addChannel(channel));
     });
 
     socket.on('removeChannel', ({ id }) => {
-      console.log('Channel removed:', id);
+      console.log('🗑️ Channel removed:', id);
       dispatch(removeChannel(id));
     });
 
     socket.on('renameChannel', ({ id, name }) => {
-      console.log('Channel renamed:', id, name);
-      dispatch(renameChannel({ id, name }));
+      console.log('✏️ Channel renamed:', id, name);
+      dispatch(renameChannelWS({ id, name }));
     });
 
     socket.on('connect_error', (error) => {
-      console.error('WebSocket connection error:', error);
+      console.error('🔌 WebSocket connection error:', error);
       dispatch(setConnectionStatus(false));
     });
 
@@ -68,6 +70,8 @@ export const useWebSocket = () => {
         socket.off('removeChannel');
         socket.off('renameChannel');
         socket.off('connect_error');
+        closeSocket();
+        socketRef.current = null;
       }
     };
   }, [isAuthenticated, token, dispatch]);

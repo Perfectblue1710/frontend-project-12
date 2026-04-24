@@ -2,24 +2,26 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Login from './components/Login';
+import Signup from './components/Signup';
 import NotFound from './components/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
+import Header from './components/Header';
 import { logout } from './store/authSlice';
-import { setChannels, setLoading as setChannelsLoading } from './slices/channelsSlice';
-import { setMessages, setLoading as setMessagesLoading, clearMessages } from './slices/messagesSlice';
-import { channelsAPI, messagesAPI } from './services/api';
+import { fetchChannels } from './slices/channelsSlice';
+import { setMessages, setLoading as setMessagesLoading } from './slices/messagesSlice';
+import { messagesAPI } from './services/api';
 import useWebSocket from './hooks/useWebSocket';
 import ChannelList from './components/chat/ChannelList';
 import MessageList from './components/chat/MessageList';
 import MessageForm from './components/chat/MessageForm';
-import { Container, Row, Col, Navbar, Nav, Button, Spinner, Badge } from 'react-bootstrap';
+import { Container, Row, Col, Spinner } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ChatPage = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { loading: channelsLoading } = useSelector((state) => state.channels);
-  const { loading: messagesLoading, isConnected } = useSelector((state) => state.messages);
+  const { loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
+  const { loading: messagesLoading } = useSelector((state) => state.messages);
   
   // Подключаем WebSocket
   useWebSocket();
@@ -28,15 +30,12 @@ const ChatPage = () => {
     if (isAuthenticated) {
       const loadData = async () => {
         try {
-          dispatch(setChannelsLoading(true));
+          // Загружаем каналы через async thunk
+          await dispatch(fetchChannels()).unwrap();
+          
+          // Загружаем сообщения
           dispatch(setMessagesLoading(true));
-          
-          const [channelsRes, messagesRes] = await Promise.all([
-            channelsAPI.getChannels(),
-            messagesAPI.getMessages(),
-          ]);
-          
-          dispatch(setChannels(channelsRes.data));
+          const messagesRes = await messagesAPI.getMessages();
           dispatch(setMessages(messagesRes.data));
         } catch (error) {
           console.error('Failed to load data:', error);
@@ -44,24 +43,13 @@ const ChatPage = () => {
             dispatch(logout());
           }
         } finally {
-          dispatch(setChannelsLoading(false));
           dispatch(setMessagesLoading(false));
         }
       };
       
       loadData();
-      
-      // Проверяем отложенные сообщения
-      const pendingMessages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
-      if (pendingMessages.length > 0 && isConnected) {
-        console.log('Resending pending messages:', pendingMessages);
-        // Здесь можно реализовать повторную отправку
-        localStorage.removeItem('pendingMessages');
-      }
-    } else {
-      dispatch(clearMessages());
     }
-  }, [isAuthenticated, dispatch, isConnected]);
+  }, [isAuthenticated, dispatch]);
 
   if (channelsLoading || messagesLoading) {
     return (
@@ -71,36 +59,29 @@ const ChatPage = () => {
     );
   }
 
+  if (channelsError) {
+    return (
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
+        <div className="text-center">
+          <h3>Ошибка загрузки</h3>
+          <p className="text-danger">{typeof channelsError === 'string' ? channelsError : 'Не удалось загрузить каналы'}</p>
+          <Button variant="primary" onClick={() => window.location.reload()}>
+            Перезагрузить
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <>
-      <Navbar bg="dark" variant="dark">
-        <Container fluid>
-          <Navbar.Brand>
-            Чат 
-            {!isConnected && (
-              <Badge bg="warning" className="ms-2">
-                Оффлайн
-              </Badge>
-            )}
-            {isConnected && (
-              <Badge bg="success" className="ms-2">
-                Онлайн
-              </Badge>
-            )}
-          </Navbar.Brand>
-          <Nav>
-            <Button variant="outline-light" onClick={() => dispatch(logout())}>
-              Выйти
-            </Button>
-          </Nav>
-        </Container>
-      </Navbar>
+      <Header />
       <Container fluid className="h-100">
         <Row className="h-100">
-          <Col md={3} className="bg-light border-end p-0" style={{ height: 'calc(100vh - 56px)' }}>
+          <Col md={3} className="bg-light border-end p-0" style={{ height: 'calc(100vh - 76px)' }}>
             <ChannelList />
           </Col>
-          <Col md={9} className="p-0 d-flex flex-column" style={{ height: 'calc(100vh - 56px)' }}>
+          <Col md={9} className="p-0 d-flex flex-column" style={{ height: 'calc(100vh - 76px)' }}>
             <MessageList />
             <MessageForm />
           </Col>
@@ -123,6 +104,7 @@ function App() {
           }
         />
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
