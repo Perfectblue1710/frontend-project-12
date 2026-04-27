@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
+import { Button, Spinner } from 'react-bootstrap';
 import Login from './components/Login';
 import Signup from './components/Signup';
 import NotFound from './components/NotFound';
@@ -14,26 +16,23 @@ import useWebSocket from './hooks/useWebSocket';
 import ChannelList from './components/chat/ChannelList';
 import MessageList from './components/chat/MessageList';
 import MessageForm from './components/chat/MessageForm';
-import { Container, Row, Col, Spinner } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const ChatPage = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
   const { loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
   const { loading: messagesLoading } = useSelector((state) => state.messages);
   
-  // Подключаем WebSocket
   useWebSocket();
 
   useEffect(() => {
     if (isAuthenticated) {
       const loadData = async () => {
         try {
-          // Загружаем каналы через async thunk
           await dispatch(fetchChannels()).unwrap();
-          
-          // Загружаем сообщения
           dispatch(setMessagesLoading(true));
           const messagesRes = await messagesAPI.getMessages();
           dispatch(setMessages(messagesRes.data));
@@ -63,10 +62,10 @@ const ChatPage = () => {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
         <div className="text-center">
-          <h3>Ошибка загрузки</h3>
-          <p className="text-danger">{typeof channelsError === 'string' ? channelsError : 'Не удалось загрузить каналы'}</p>
+          <h3>{t('errors.loadError')}</h3>
+          <p className="text-danger">{typeof channelsError === 'string' ? channelsError : t('errors.loadError')}</p>
           <Button variant="primary" onClick={() => window.location.reload()}>
-            Перезагрузить
+            {t('errors.reload')}
           </Button>
         </div>
       </div>

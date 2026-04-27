@@ -3,18 +3,20 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap';
 import { setToken, setError, setLoading, clearError } from '../store/authSlice';
 import { authAPI } from '../services/api';
 
 const Login = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.auth);
 
   const validationSchema = Yup.object({
-    username: Yup.string().required('Обязательное поле'),
-    password: Yup.string().required('Обязательное поле'),
+    username: Yup.string().required(t('errors.required')),
+    password: Yup.string().required(t('errors.required')),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -29,9 +31,9 @@ const Login = () => {
     } catch (err) {
       console.error('Login error:', err);
       if (err.response && err.response.status === 401) {
-        dispatch(setError('Неверное имя пользователя или пароль'));
+        dispatch(setError(t('errors.invalidCredentials')));
       } else {
-        dispatch(setError('Ошибка сервера. Попробуйте позже.'));
+        dispatch(setError(t('errors.serverError')));
       }
     } finally {
       dispatch(setLoading(false));
@@ -44,7 +46,7 @@ const Login = () => {
       <Row className="justify-content-md-center">
         <Col md={6}>
           <div className="bg-light p-4 rounded shadow">
-            <h2 className="text-center mb-4">Вход в чат</h2>
+            <h2 className="text-center mb-4">{t('auth.loginTitle')}</h2>
             
             {error && (
               <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
@@ -60,12 +62,12 @@ const Login = () => {
               {({ isSubmitting, errors, touched }) => (
                 <Form>
                   <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>Имя пользователя</BootstrapForm.Label>
+                    <BootstrapForm.Label>{t('auth.username')}</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="text"
                       name="username"
-                      placeholder="Введите username"
+                      placeholder={t('auth.usernamePlaceholder')}
                       isInvalid={touched.username && errors.username}
                       disabled={loading}
                     />
@@ -73,12 +75,12 @@ const Login = () => {
                   </BootstrapForm.Group>
 
                   <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>Пароль</BootstrapForm.Label>
+                    <BootstrapForm.Label>{t('auth.password')}</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="password"
                       name="password"
-                      placeholder="Введите пароль"
+                      placeholder={t('auth.passwordPlaceholder')}
                       isInvalid={touched.password && errors.password}
                       disabled={loading}
                     />
@@ -91,15 +93,15 @@ const Login = () => {
                     disabled={isSubmitting || loading}
                     className="w-100 mb-3"
                   >
-                    {loading ? 'Вход...' : 'Войти'}
+                    {loading ? t('auth.loggingIn') : t('auth.loginButton')}
                   </Button>
                   
                   <div className="text-center">
-                    <Link to="/signup">Нет аккаунта? Зарегистрируйтесь</Link>
+                    <Link to="/signup">{t('auth.noAccount')}</Link>
                   </div>
                   
                   <div className="text-center mt-2 text-muted">
-                    <small>Тестовые данные: admin / admin</small>
+                    <small>{t('auth.testCredentials')}</small>
                   </div>
                 </Form>
               )}

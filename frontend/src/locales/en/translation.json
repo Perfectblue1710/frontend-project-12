@@ -1,0 +1,78 @@
+{
+  "app": {
+    "name": "Hexlet Chat",
+    "online": "Online",
+    "offline": "Offline"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "signup": "Sign Up",
+    "loginTitle": "Login to Chat",
+    "signupTitle": "Sign Up",
+    "username": "Username",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "usernamePlaceholder": "Enter username",
+    "passwordPlaceholder": "Enter password",
+    "confirmPasswordPlaceholder": "Confirm password",
+    "loginButton": "Login",
+    "signupButton": "Sign Up",
+    "loggingIn": "Logging in...",
+    "signingUp": "Signing up...",
+    "noAccount": "No account? Sign up",
+    "hasAccount": "Already have an account? Login",
+    "testCredentials": "Test credentials: admin / admin"
+  },
+  "errors": {
+    "required": "Required field",
+    "usernameMin": "Username must be 3-20 characters",
+    "usernameMax": "Username must be 3-20 characters",
+    "usernameLength": "3-20 characters",
+    "passwordMin": "Password must be at least 6 characters",
+    "passwordsNotMatch": "Passwords must match",
+    "invalidCredentials": "Invalid username or password",
+    "userExists": "User with this name already exists",
+    "serverError": "Server error. Please try again later.",
+    "channelExists": "Channel with this name already exists",
+    "channelNameRequired": "Required field",
+    "channelNameLength": "3-20 characters",
+    "loadError": "Failed to load channels",
+    "reload": "Reload"
+  },
+  "chat": {
+    "channels": "Channels",
+    "addChannel": "Add channel",
+    "channelName": "Channel name",
+    "channelNamePlaceholder": "Enter channel name",
+    "add": "Add",
+    "cancel": "Cancel",
+    "adding": "Adding...",
+    "rename": "Rename",
+    "renameChannel": "Rename channel",
+    "renameButton": "Rename",
+    "renaming": "Renaming...",
+    "delete": "Delete",
+    "deleteChannel": "Delete channel",
+    "deleteConfirmation": "Are you sure you want to delete channel",
+    "deleteWarning": "All messages in this channel will be permanently deleted.",
+    "deleting": "Deleting...",
+    "noMessages": "No messages. Be the first!",
+    "messagePlaceholder": "Enter message...",
+    "send": "Send",
+    "sending": "Sending...",
+    "messageSentOffline": "Message sent, but WebSocket is not connected. New messages may not arrive in real time.",
+    "sendFailed": "Failed to send message. Check your connection.",
+    "offlineMode": "⚡ Working in offline mode. Messages will be sent when connection is restored."
+  },
+  "notFound": {
+    "title": "404 - Page not found",
+    "message": "Sorry, this page does not exist.",
+    "backToHome": "Back to home"
+  },
+  "websocket": {
+    "connecting": "Connecting...",
+    "connected": "Connected",
+    "disconnected": "Disconnected"
+  }
+}

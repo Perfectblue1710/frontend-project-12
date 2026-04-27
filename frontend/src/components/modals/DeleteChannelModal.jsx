@@ -1,10 +1,12 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { Modal, Button } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { Modal, Button, Alert } from 'react-bootstrap';
 import { deleteChannel } from '../../slices/channelsSlice';
 
 const DeleteChannelModal = ({ show, onHide, channelId, channelName }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.channels);
+  const { loading, error } = useSelector((state) => state.channels);
 
   const handleDelete = async () => {
     try {
@@ -18,18 +20,23 @@ const DeleteChannelModal = ({ show, onHide, channelId, channelName }) => {
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Удалить канал</Modal.Title>
+        <Modal.Title>{t('chat.deleteChannel')}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>Вы уверены, что хотите удалить канал <strong>#{channelName}</strong>?</p>
-        <p className="text-danger">Все сообщения в этом канале будут безвозвратно удалены.</p>
+        {error && (
+          <Alert variant="danger" className="mb-3">
+            {typeof error === 'string' ? error : t('errors.serverError')}
+          </Alert>
+        )}
+        <p>{t('chat.deleteConfirmation')} <strong>#{channelName}</strong>?</p>
+        <p className="text-danger">{t('chat.deleteWarning')}</p>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={onHide} disabled={loading}>
-          Отмена
+          {t('chat.cancel')}
         </Button>
         <Button variant="danger" onClick={handleDelete} disabled={loading}>
-          {loading ? 'Удаление...' : 'Удалить'}
+          {loading ? t('chat.deleting') : t('chat.delete')}
         </Button>
       </Modal.Footer>
     </Modal>

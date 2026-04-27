@@ -1,12 +1,14 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { setCurrentChannel, deleteChannel } from '../../slices/channelsSlice';
+import { useTranslation } from 'react-i18next';
+import { setCurrentChannel } from '../../slices/channelsSlice';
 import { ListGroup, Button, Alert, Dropdown } from 'react-bootstrap';
 import AddChannelModal from '../modals/AddChannelModal';
 import RenameChannelModal from '../modals/RenameChannelModal';
 import DeleteChannelModal from '../modals/DeleteChannelModal';
 
 const ChannelList = () => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { channels, currentChannelId, loading, error } = useSelector((state) => state.channels);
   const { isAuthenticated } = useSelector((state) => state.auth);
@@ -20,24 +22,10 @@ const ChannelList = () => {
     return null;
   }
 
-  const handleChannelClick = (channelId) => {
-    dispatch(setCurrentChannel(channelId));
-  };
-
-  const handleRename = (channel) => {
-    setSelectedChannel(channel);
-    setShowRenameModal(true);
-  };
-
-  const handleDelete = (channel) => {
-    setSelectedChannel(channel);
-    setShowDeleteModal(true);
-  };
-
   return (
     <div className="h-100 d-flex flex-column">
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
-        <h5 className="mb-0">Каналы</h5>
+        <h5 className="mb-0">{t('chat.channels')}</h5>
         <Button 
           variant="outline-primary" 
           size="sm"
@@ -50,7 +38,7 @@ const ChannelList = () => {
       
       {error && (
         <Alert variant="danger" className="m-3">
-          {typeof error === 'string' ? error : 'Ошибка при загрузке каналов'}
+          {typeof error === 'string' ? error : t('errors.loadError')}
         </Alert>
       )}
       
@@ -60,7 +48,7 @@ const ChannelList = () => {
             key={channel.id}
             action
             active={channel.id === currentChannelId}
-            onClick={() => handleChannelClick(channel.id)}
+            onClick={() => dispatch(setCurrentChannel(channel.id))}
             className="d-flex justify-content-between align-items-center"
             style={{ cursor: 'pointer' }}
           >
@@ -69,25 +57,31 @@ const ChannelList = () => {
               {channel.name}
             </div>
             {channel.id !== 1 && (
-              <Dropdown onClick={(e) => e.stopPropagation()}>
+              <Dropdown>
                 <Dropdown.Toggle 
-                  as={Button} 
+                  as="div"
                   variant="link" 
                   size="sm" 
                   className="p-0 text-muted"
-                  style={{ textDecoration: 'none' }}
+                  style={{ cursor: 'pointer', textDecoration: 'none' }}
                 >
                   ⋮
                 </Dropdown.Toggle>
                 <Dropdown.Menu align="end">
-                  <Dropdown.Item onClick={() => handleRename(channel)}>
-                    Переименовать
+                  <Dropdown.Item onClick={() => {
+                    setSelectedChannel(channel);
+                    setShowRenameModal(true);
+                  }}>
+                    {t('chat.rename')}
                   </Dropdown.Item>
                   <Dropdown.Item 
-                    onClick={() => handleDelete(channel)}
+                    onClick={() => {
+                      setSelectedChannel(channel);
+                      setShowDeleteModal(true);
+                    }}
                     className="text-danger"
                   >
-                    Удалить
+                    {t('chat.delete')}
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

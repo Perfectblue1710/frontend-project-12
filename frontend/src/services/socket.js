@@ -7,7 +7,10 @@ export const initSocket = (token) => {
     socket.disconnect();
   }
   
-  socket = io({
+  // Используем прямой URL к серверу
+  const SOCKET_URL = 'http://localhost:5001';
+  
+  socket = io(SOCKET_URL, {
     path: '/api/v1/ws',
     transports: ['websocket', 'polling'],
     auth: {

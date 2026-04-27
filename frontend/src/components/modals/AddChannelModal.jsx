@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Modal, Form, Button } from 'react-bootstrap';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { createChannel } from '../../slices/channelsSlice';
 
 const AddChannelModal = ({ show, onHide }) => {
+  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { channels, loading } = useSelector((state) => state.channels);
   const inputRef = useRef(null);
@@ -18,13 +20,13 @@ const AddChannelModal = ({ show, onHide }) => {
 
   const validationSchema = Yup.object({
     name: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
+      .min(3, t('errors.usernameLength'))
+      .max(20, t('errors.usernameLength'))
       .notOneOf(
         channels.map(ch => ch.name),
-        'Канал с таким именем уже существует'
+        t('errors.channelExists')
       )
-      .required('Обязательное поле'),
+      .required(t('errors.required')),
   });
 
   const handleSubmit = async (values, { resetForm, setSubmitting }) => {
@@ -42,24 +44,24 @@ const AddChannelModal = ({ show, onHide }) => {
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton>
-        <Modal.Title>Добавить канал</Modal.Title>
+        <Modal.Title>{t('chat.addChannel')}</Modal.Title>
       </Modal.Header>
       <Formik
         initialValues={{ name: '' }}
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ handleSubmit, isSubmitting, setFieldValue }) => (
+        {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
           <Form onSubmit={handleSubmit}>
             <Modal.Body>
               <Form.Group>
-                <Form.Label>Имя канала</Form.Label>
+                <Form.Label>{t('chat.channelName')}</Form.Label>
                 <Form.Control
                   type="text"
                   name="name"
-                  value={values => values.name}
+                  value={values.name}
                   onChange={(e) => setFieldValue('name', e.target.value)}
-                  placeholder="Введите имя канала"
+                  placeholder={t('chat.channelNamePlaceholder')}
                   disabled={isSubmitting || loading}
                   ref={inputRef}
                 />
@@ -68,10 +70,10 @@ const AddChannelModal = ({ show, onHide }) => {
             </Modal.Body>
             <Modal.Footer>
               <Button variant="secondary" onClick={onHide} disabled={isSubmitting || loading}>
-                Отмена
+                {t('chat.cancel')}
               </Button>
               <Button variant="primary" type="submit" disabled={isSubmitting || loading}>
-                {isSubmitting || loading ? 'Добавление...' : 'Добавить'}
+                {isSubmitting || loading ? t('chat.adding') : t('chat.add')}
               </Button>
             </Modal.Footer>
           </Form>

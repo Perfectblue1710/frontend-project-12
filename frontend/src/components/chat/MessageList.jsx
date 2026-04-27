@@ -1,8 +1,10 @@
 import { useSelector } from 'react-redux';
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ListGroup, Alert } from 'react-bootstrap';
 
 const MessageList = () => {
+  const { t } = useTranslation();
   const { messages, error } = useSelector((state) => state.messages);
   const { currentChannelId, channels } = useSelector((state) => state.channels);
   const messagesEndRef = useRef(null);
@@ -33,7 +35,7 @@ const MessageList = () => {
       <ListGroup variant="flush" className="flex-grow-1 overflow-auto p-3">
         {currentMessages.length === 0 && (
           <div className="text-center text-muted mt-5">
-            Нет сообщений. Будьте первым!
+            {t('chat.noMessages')}
           </div>
         )}
         {currentMessages.map((message) => (

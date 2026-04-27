@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useTranslation } from 'react-i18next';
 import { Form, Button, InputGroup, Alert } from 'react-bootstrap';
 import { addMessage } from '../../slices/messagesSlice';
 import { messagesAPI } from '../../services/api';
-import { getSocket } from '../../services/socket';
 
 const MessageForm = () => {
+  const { t } = useTranslation();
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState(null);
@@ -22,27 +23,22 @@ const MessageForm = () => {
     setError(null);
 
     try {
-      // Отправляем сообщение через REST API
       const response = await messagesAPI.sendMessage({
         channelId: currentChannelId,
         body: messageText,
       });
       
-      // Сообщение будет добавлено через WebSocket
-      // Но для оптимизации можно добавить сразу
       dispatch(addMessage(response.data));
       setMessage('');
       
-      // Если WebSocket отключен, показываем предупреждение
       if (!isConnected) {
-        setError('Сообщение отправлено, но WebSocket не подключен. Новые сообщения могут не приходить в реальном времени.');
+        setError(t('chat.messageSentOffline'));
         setTimeout(() => setError(null), 5000);
       }
     } catch (err) {
       console.error('Failed to send message:', err);
-      setError('Не удалось отправить сообщение. Проверьте соединение.');
+      setError(t('chat.sendFailed'));
       
-      // Сохраняем сообщение в localStorage для повторной отправки
       const pendingMessages = JSON.parse(localStorage.getItem('pendingMessages') || '[]');
       pendingMessages.push({
         channelId: currentChannelId,
@@ -64,7 +60,7 @@ const MessageForm = () => {
       )}
       {!isConnected && (
         <Alert variant="info" className="mb-3">
-          ⚡ Работа в оффлайн режиме. Сообщения будут отправлены при восстановлении соединения.
+          {t('chat.offlineMode')}
         </Alert>
       )}
       <Form onSubmit={handleSubmit}>
@@ -72,7 +68,7 @@ const MessageForm = () => {
           <Form.Control
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="Введите сообщение..."
+            placeholder={t('chat.messagePlaceholder')}
             disabled={sending}
             onKeyPress={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {
@@ -82,7 +78,7 @@ const MessageForm = () => {
             }}
           />
           <Button type="submit" variant="primary" disabled={sending}>
-            {sending ? 'Отправка...' : 'Отправить'}
+            {sending ? t('chat.sending') : t('chat.send')}
           </Button>
         </InputGroup>
       </Form>

@@ -1,0 +1,78 @@
+{
+  "app": {
+    "name": "Hexlet Chat",
+    "online": "Онлайн",
+    "offline": "Оффлайн"
+  },
+  "auth": {
+    "login": "Войти",
+    "logout": "Выйти",
+    "signup": "Зарегистрироваться",
+    "loginTitle": "Вход в чат",
+    "signupTitle": "Регистрация",
+    "username": "Имя пользователя",
+    "password": "Пароль",
+    "confirmPassword": "Подтверждение пароля",
+    "usernamePlaceholder": "Введите имя пользователя",
+    "passwordPlaceholder": "Введите пароль",
+    "confirmPasswordPlaceholder": "Подтвердите пароль",
+    "loginButton": "Войти",
+    "signupButton": "Зарегистрироваться",
+    "loggingIn": "Вход...",
+    "signingUp": "Регистрация...",
+    "noAccount": "Нет аккаунта? Зарегистрируйтесь",
+    "hasAccount": "Уже есть аккаунт? Войдите",
+    "testCredentials": "Тестовые данные: admin / admin"
+  },
+  "errors": {
+    "required": "Обязательное поле",
+    "usernameMin": "Имя пользователя должно быть от 3 до 20 символов",
+    "usernameMax": "Имя пользователя должно быть от 3 до 20 символов",
+    "usernameLength": "От 3 до 20 символов",
+    "passwordMin": "Пароль должен быть не менее 6 символов",
+    "passwordsNotMatch": "Пароли должны совпадать",
+    "invalidCredentials": "Неверное имя пользователя или пароль",
+    "userExists": "Пользователь с таким именем уже существует",
+    "serverError": "Ошибка сервера. Попробуйте позже.",
+    "channelExists": "Канал с таким именем уже существует",
+    "channelNameRequired": "Обязательное поле",
+    "channelNameLength": "От 3 до 20 символов",
+    "loadError": "Не удалось загрузить каналы",
+    "reload": "Перезагрузить"
+  },
+  "chat": {
+    "channels": "Каналы",
+    "addChannel": "Добавить канал",
+    "channelName": "Имя канала",
+    "channelNamePlaceholder": "Введите имя канала",
+    "add": "Добавить",
+    "cancel": "Отмена",
+    "adding": "Добавление...",
+    "rename": "Переименовать",
+    "renameChannel": "Переименовать канал",
+    "renameButton": "Переименовать",
+    "renaming": "Переименование...",
+    "delete": "Удалить",
+    "deleteChannel": "Удалить канал",
+    "deleteConfirmation": "Вы уверены, что хотите удалить канал",
+    "deleteWarning": "Все сообщения в этом канале будут безвозвратно удалены.",
+    "deleting": "Удаление...",
+    "noMessages": "Нет сообщений. Будьте первым!",
+    "messagePlaceholder": "Введите сообщение...",
+    "send": "Отправить",
+    "sending": "Отправка...",
+    "messageSentOffline": "Сообщение отправлено, но WebSocket не подключен. Новые сообщения могут не приходить в реальном времени.",
+    "sendFailed": "Не удалось отправить сообщение. Проверьте соединение.",
+    "offlineMode": "⚡ Работа в оффлайн режиме. Сообщения будут отправлены при восстановлении соединения."
+  },
+  "notFound": {
+    "title": "404 - Страница не найдена",
+    "message": "Извините, такой страницы не существует.",
+    "backToHome": "Вернуться на главную"
+  },
+  "websocket": {
+    "connecting": "Подключение...",
+    "connected": "Подключено",
+    "disconnected": "Отключено"
+  }
+}
