@@ -4,9 +4,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap';
 import { setToken, setError, setLoading, clearError } from '../store/authSlice';
 import { authAPI } from '../services/api';
+import { logError, logInfo } from '../utils/rollbar';
 
 const Login = () => {
   const { t } = useTranslation();
@@ -27,13 +29,29 @@ const Login = () => {
       const response = await authAPI.login(values.username, values.password);
       const { token } = response.data;
       dispatch(setToken(token));
+      logInfo('User logged in successfully', { username: values.username });
+      toast.success(`Добро пожаловать, ${values.username}!`);
       navigate('/');
     } catch (err) {
       console.error('Login error:', err);
+      logError(err, { 
+        action: 'login', 
+        username: values.username,
+        status: err.response?.status 
+      });
+      
       if (err.response && err.response.status === 401) {
-        dispatch(setError(t('errors.invalidCredentials')));
+        const errorMsg = t('errors.invalidCredentials');
+        dispatch(setError(errorMsg));
+        toast.error(errorMsg);
+      } else if (err.code === 'ERR_NETWORK') {
+        const errorMsg = t('toasts.networkError');
+        dispatch(setError(errorMsg));
+        toast.error(errorMsg);
       } else {
-        dispatch(setError(t('errors.serverError')));
+        const errorMsg = t('errors.serverError');
+        dispatch(setError(errorMsg));
+        toast.error(errorMsg);
       }
     } finally {
       dispatch(setLoading(false));

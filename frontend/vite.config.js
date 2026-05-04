@@ -17,4 +17,10 @@ export default defineConfig({
       },
     },
   },
+  define: {
+    'process.env': {
+      NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+      REACT_APP_ROLLBAR_TOKEN: JSON.stringify(process.env.REACT_APP_ROLLBAR_TOKEN),
+    },
+  },
 });
