@@ -64,6 +64,7 @@ const ChannelList = () => {
                   size="sm" 
                   className="p-0 text-muted"
                   style={{ cursor: 'pointer', textDecoration: 'none' }}
+                  aria-label={t('chat.channelMenu')}
                 >
                   ⋮
                 </Dropdown.Toggle>

@@ -80,7 +80,7 @@ const Login = () => {
               {({ isSubmitting, errors, touched }) => (
                 <Form>
                   <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>{t('auth.username')}</BootstrapForm.Label>
+                    <BootstrapForm.Label>{t('auth.usernameLogin')}</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="text"
