@@ -1,20 +1,24 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { Modal, Form, Button } from 'react-bootstrap';
+import { Modal, Form, Button, Alert } from 'react-bootstrap';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { createChannel } from '../../slices/channelsSlice';
+import { containsProfanity, filterProfanity } from '../../utils/profanityFilter';
+import { toast } from 'react-toastify';
 
 const AddChannelModal = ({ show, onHide }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { channels, loading } = useSelector((state) => state.channels);
   const inputRef = useRef(null);
+  const [profanityWarning, setProfanityWarning] = useState(false);
 
   useEffect(() => {
-    if (show && inputRef.current) {
+    if (show) {
       setTimeout(() => inputRef.current?.focus(), 100);
+      setProfanityWarning(false);
     }
   }, [show]);
 
@@ -22,23 +26,44 @@ const AddChannelModal = ({ show, onHide }) => {
     name: Yup.string()
       .min(3, t('errors.usernameLength'))
       .max(20, t('errors.usernameLength'))
-      .notOneOf(
-        channels.map(ch => ch.name),
-        t('errors.channelExists')
-      )
-      .required(t('errors.required')),
+      .notOneOf(channels.map(ch => ch.name), t('errors.channelExists'))
+      .required(t('errors.required'))
+      .test('profanity', 'Название содержит нецензурные слова', (value) => {
+        if (!value) return true;
+        return !containsProfanity(value);
+      }),
   });
 
-  const handleSubmit = async (values, { resetForm, setSubmitting }) => {
+  const handleSubmit = async (values, { resetForm, setSubmitting, setFieldError }) => {
+    let channelName = values.name;
+    if (containsProfanity(channelName)) {
+      const filtered = filterProfanity(channelName, '*');
+      setProfanityWarning(true);
+      const ok = window.confirm(`Название содержит нецензурные слова.\nОтфильтрованный вариант: "${filtered}"\nСоздать канал?`);
+      if (!ok) {
+        setSubmitting(false);
+        return;
+      }
+      channelName = filtered;
+      toast.info('Название канала отфильтровано');
+    }
     try {
-      await dispatch(createChannel(values.name)).unwrap();
+      await dispatch(createChannel(channelName)).unwrap();
       resetForm();
       onHide();
-    } catch (error) {
-      console.error('Failed to create channel:', error);
+    } catch (err) {
+      console.error(err);
+      if (err.response?.data?.message) setFieldError('name', err.response.data.message);
     } finally {
       setSubmitting(false);
+      setProfanityWarning(false);
     }
+  };
+
+  const handleNameChange = (e, setFieldValue) => {
+    const val = e.target.value;
+    setFieldValue('name', val);
+    setProfanityWarning(containsProfanity(val));
   };
 
   return (
@@ -54,16 +79,22 @@ const AddChannelModal = ({ show, onHide }) => {
         {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
           <Form onSubmit={handleSubmit}>
             <Modal.Body>
+              {profanityWarning && (
+                <Alert variant="warning" className="mb-3">
+                  ⚠️ Название содержит нецензурные слова. Оно будет отфильтровано.
+                </Alert>
+              )}
               <Form.Group>
                 <Form.Label>{t('chat.channelName')}</Form.Label>
                 <Form.Control
                   type="text"
                   name="name"
                   value={values.name}
-                  onChange={(e) => setFieldValue('name', e.target.value)}
+                  onChange={(e) => handleNameChange(e, setFieldValue)}
                   placeholder={t('chat.channelNamePlaceholder')}
                   disabled={isSubmitting || loading}
                   ref={inputRef}
+                  isInvalid={containsProfanity(values.name)}
                 />
                 <ErrorMessage name="name" component={Form.Text} className="text-danger" />
               </Form.Group>
@@ -72,7 +103,7 @@ const AddChannelModal = ({ show, onHide }) => {
               <Button variant="secondary" onClick={onHide} disabled={isSubmitting || loading}>
                 {t('chat.cancel')}
               </Button>
-              <Button variant="primary" type="submit" disabled={isSubmitting || loading}>
+              <Button variant="primary" type="submit" disabled={isSubmitting || loading || containsProfanity(values.name)}>
                 {isSubmitting || loading ? t('chat.adding') : t('chat.add')}
               </Button>
             </Modal.Footer>

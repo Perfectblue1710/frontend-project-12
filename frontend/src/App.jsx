@@ -21,7 +21,6 @@ import MessageForm from './components/chat/MessageForm';
 import { Container, Row, Col } from 'react-bootstrap';
 import { logError, logInfo } from './utils/rollbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import RollbarTest from './components/RollbarTest';
 
 const ChatPage = () => {
   const { t } = useTranslation();
@@ -125,7 +124,6 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/rollbar-test" element={<RollbarTest />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<NotFound />} />

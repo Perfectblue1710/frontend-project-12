@@ -43,3 +43,7 @@ export const logWarning = (message, context = {}) => {
 };
 
 export default rollbar;
+
+export const testRollbar = () => {
+  console.log('Rollbar test function (no-op for production)');
+};
