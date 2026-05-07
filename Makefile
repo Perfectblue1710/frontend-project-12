@@ -6,3 +6,5 @@ build:
 
 start:
 	npx start-server -s ./frontend/dist
+
+.PHONY: install build start
