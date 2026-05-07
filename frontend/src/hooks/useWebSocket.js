@@ -11,7 +11,6 @@ export const useWebSocket = () => {
   const socketRef = useRef(null);
 
   useEffect(() => {
-    // ВАЖНО: подключаем WebSocket ТОЛЬКО если пользователь авторизован
     if (!isAuthenticated || !token) {
       console.log('WebSocket: not authenticated, skipping connection');
       if (socketRef.current) {

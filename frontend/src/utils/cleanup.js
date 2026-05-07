@@ -1,4 +1,4 @@
-// Очищаем токен при старте приложения для тестовой среды
+
 export const cleanupForTesting = () => {
   if (typeof window !== 'undefined') {
     const isTestEnv = window.location.search.includes('test=true') || 

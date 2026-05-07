@@ -9,7 +9,6 @@ const ProtectedRoute = ({ children }) => {
     return <Navigate to="/login" replace />;
   }
   
-  // Если авторизован - показываем защищённый контент
   return children;
 };
 
