@@ -7,8 +7,7 @@ export const initSocket = (token) => {
     socket.disconnect();
   }
   
-  // Используем прямой URL к серверу
-  const SOCKET_URL = 'http://localhost:5001';
+  const SOCKET_URL = import.meta.env.PROD ? window.location.origin : 'http://localhost:5001';
   
   socket = io(SOCKET_URL, {
     path: '/api/v1/ws',
@@ -17,9 +16,10 @@ export const initSocket = (token) => {
       token,
     },
     reconnection: true,
-    reconnectionAttempts: 5,
+    reconnectionAttempts: 3,
     reconnectionDelay: 1000,
-    timeout: 20000,
+    timeout: 10000,
+    autoConnect: true,
   });
   
   return socket;

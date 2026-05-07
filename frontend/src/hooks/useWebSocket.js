@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { initSocket, closeSocket } from '../services/socket';
 import { addMessage, setConnectionStatus } from '../slices/messagesSlice';
 import { addChannel, removeChannel, renameChannelWS } from '../slices/channelsSlice';
@@ -10,7 +11,9 @@ export const useWebSocket = () => {
   const socketRef = useRef(null);
 
   useEffect(() => {
+    // ВАЖНО: подключаем WebSocket ТОЛЬКО если пользователь авторизован
     if (!isAuthenticated || !token) {
+      console.log('WebSocket: not authenticated, skipping connection');
       if (socketRef.current) {
         closeSocket();
         socketRef.current = null;
@@ -18,13 +21,11 @@ export const useWebSocket = () => {
       return;
     }
 
-    console.log('Initializing WebSocket with token:', token);
+    console.log('Initializing WebSocket for authenticated user');
     
-    // Инициализируем сокет
     const socket = initSocket(token);
     socketRef.current = socket;
 
-    // Обработчики событий
     socket.on('connect', () => {
       console.log('✅ WebSocket connected');
       dispatch(setConnectionStatus(true));
@@ -60,7 +61,6 @@ export const useWebSocket = () => {
       dispatch(setConnectionStatus(false));
     });
 
-    // Очистка при размонтировании
     return () => {
       if (socketRef.current) {
         socket.off('connect');

@@ -8,8 +8,11 @@ import App from './App';
 import './i18n';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
+import { cleanupForTesting } from './utils/cleanup';
 
-// Компонент для отображения ошибки
+// Очищаем токен для тестов
+cleanupForTesting();
+
 const FallbackUI = () => (
   <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
     <div className="text-center">
