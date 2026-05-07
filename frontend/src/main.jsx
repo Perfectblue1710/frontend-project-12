@@ -2,40 +2,28 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { Provider as RollbarProvider, ErrorBoundary } from '@rollbar/react';
-import rollbar from './utils/rollbar';
 import App from './App';
 import './i18n';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.css';
-import { cleanupForTesting } from './utils/cleanup';
 
-// Очищаем токен для тестов
-cleanupForTesting();
+console.log('Main.jsx - Application starting');
 
-const FallbackUI = () => (
-  <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
-    <div className="text-center">
-      <h1>Что-то пошло не так 😔</h1>
-      <p>Мы уже работаем над исправлением проблемы.</p>
-      <button 
-        className="btn btn-primary" 
-        onClick={() => window.location.reload()}
-      >
-        Перезагрузить страницу
-      </button>
-    </div>
-  </div>
-);
+// Очищаем токен для тестовой среды
+if (typeof window !== 'undefined') {
+  const urlParams = new URLSearchParams(window.location.search);
+  const isTest = urlParams.get('test') === 'true' || window.location.hostname === 'localhost';
+  
+  if (isTest) {
+    console.log('Test environment detected, clearing token');
+    localStorage.removeItem('token');
+  }
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RollbarProvider instance={rollbar}>
-      <ErrorBoundary fallbackUI={FallbackUI}>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </ErrorBoundary>
-    </RollbarProvider>
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>
 );

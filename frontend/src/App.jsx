@@ -19,52 +19,54 @@ import ChannelList from './components/chat/ChannelList';
 import MessageList from './components/chat/MessageList';
 import MessageForm from './components/chat/MessageForm';
 import { Container, Row, Col } from 'react-bootstrap';
-import { logError, logInfo } from './utils/rollbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
+
+console.log('App component loaded', { 
+  mode: import.meta.env.MODE,
+  hasLocalStorage: typeof localStorage !== 'undefined',
+  token: localStorage.getItem('token') ? 'present' : 'absent'
+});
 
 const ChatPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
+  const { loading: channelsLoading } = useSelector((state) => state.channels);
   const { loading: messagesLoading } = useSelector((state) => state.messages);
+  
+  console.log('ChatPage rendered', { isAuthenticated });
   
   useWebSocket();
 
   useEffect(() => {
-    if (isAuthenticated) {
-      const loadData = async () => {
-        try {
-          await dispatch(fetchChannels()).unwrap();
-          dispatch(setMessagesLoading(true));
-          const messagesRes = await messagesAPI.getMessages();
-          dispatch(setMessages(messagesRes.data));
-          logInfo('Chat data loaded successfully');
-        } catch (error) {
-          console.error('Failed to load data:', error);
-          logError(error, { action: 'loadChatData' });
-          toast.error(t('toasts.loadError'));
-          if (error.response?.status === 401) {
-            toast.error(t('toasts.unauthorized'));
-            dispatch(logout());
-          } else if (error.code === 'ERR_NETWORK') {
-            toast.error(t('toasts.networkError'));
-          }
-        } finally {
-          dispatch(setMessagesLoading(false));
+    console.log('ChatPage useEffect', { isAuthenticated });
+    if (!isAuthenticated) {
+      console.log('Not authenticated, skipping data load');
+      return;
+    }
+    
+    const loadData = async () => {
+      console.log('Loading data...');
+      try {
+        await dispatch(fetchChannels()).unwrap();
+        dispatch(setMessagesLoading(true));
+        const messagesRes = await messagesAPI.getMessages();
+        dispatch(setMessages(messagesRes.data));
+        console.log('Data loaded successfully');
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        toast.error(t('toasts.loadError'));
+        if (error.response?.status === 401) {
+          toast.error(t('toasts.unauthorized'));
+          dispatch(logout());
         }
-      };
-      
-      loadData();
-    }
+      } finally {
+        dispatch(setMessagesLoading(false));
+      }
+    };
+    
+    loadData();
   }, [isAuthenticated, dispatch, t]);
-
-  useEffect(() => {
-    if (channelsError) {
-      logError(new Error(channelsError), { action: 'channelsLoad' });
-      toast.error(t('toasts.loadError'));
-    }
-  }, [channelsError, t]);
 
   if (channelsLoading || messagesLoading) {
     return (
@@ -105,14 +107,6 @@ const ChatPage = () => {
 };
 
 function App() {
-  useEffect(() => {
-    // Логируем загрузку приложения
-    logInfo('Application started', { 
-      version: '1.0.0',
-      environment: process.env.NODE_ENV 
-    });
-  }, []);
-
   return (
     <BrowserRouter>
       <Routes>
