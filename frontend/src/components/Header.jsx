@@ -19,7 +19,7 @@ const Header = () => {
   return (
     <Navbar bg="dark" variant="dark" className="mb-4">
       <Navbar.Brand as={Link} to="/">
-        {t('app.name')}
+        Hexlet Chat
       </Navbar.Brand>
       <Nav className="ms-auto">
         {isAuthenticated && (

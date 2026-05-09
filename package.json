@@ -4,7 +4,6 @@
   "description": "[![Actions Status](https://github.com/Perfectblue1710/frontend-project-12/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Perfectblue1710/frontend-project-12/actions)",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "start-server -s ./frontend/dist"
   },
   "author": "",
@@ -14,9 +13,15 @@
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.15.0",
     "bootstrap": "^5.3.8",
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
     "formik": "^2.4.9",
     "react-bootstrap": "^2.10.10",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.14.1"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.2"
   }
 }

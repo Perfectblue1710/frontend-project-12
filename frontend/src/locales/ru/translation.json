@@ -21,12 +21,11 @@
     "signupButton": "Зарегистрироваться",
     "loggingIn": "Вход...",
     "signingUp": "Регистрация...",
-    "noAccount": "Нет аккаунта? Зарегистрируйтесь",
+    "noAccount": "Регистрация",
     "hasAccount": "Уже есть аккаунт? Войдите",
     "testCredentials": "Тестовые данные: admin / admin"
   },
   "errors": {
-    "required": "Обязательное поле",
     "usernameMin": "От 3 до 20 символов",
     "usernameMax": "От 3 до 20 символов",
     "usernameLength": "От 3 до 20 символов",
