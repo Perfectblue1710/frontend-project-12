@@ -84,6 +84,7 @@ const MessageForm = () => {
       <Form onSubmit={handleSubmit}>
         <InputGroup>
           <Form.Control
+          aria-label="Новое сообщение"
             value={message}
             onChange={handleChange}
             placeholder={t('chat.messagePlaceholder')}

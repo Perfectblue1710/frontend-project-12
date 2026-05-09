@@ -21,19 +21,20 @@ const ChannelList = () => {
   if (!isAuthenticated || !channels.length) {
     return null;
   }
+  if (channels.length === 0) {
+  return <div>Канал general</div>;
+}
 
   return (
     <div className="h-100 d-flex flex-column">
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
         <h5 className="mb-0">{t('chat.channels')}</h5>
-        <Button 
-          variant="outline-primary" 
-          size="sm"
-          onClick={() => setShowAddModal(true)}
-          disabled={loading}
-        >
-          +
-        </Button>
+       <Button 
+  variant={channel.id === currentChannelId ? "primary" : "light"}
+  onClick={() => dispatch(setCurrentChannel(channel.id))}
+>
+  # {channel.name}
+</Button>
       </div>
       
       {error && (
