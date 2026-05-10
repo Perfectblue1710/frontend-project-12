@@ -1,14 +1,11 @@
 install:
-	cd frontend && npm install
-	cd frontend && npm install
-	# Альтернатива:
-	# npm install --prefix frontend
-	# npm install
+	npm ci
+	cd frontend && npm ci
 
 build:
 	cd frontend && npm run build
 
 start:
-	npx start-server -s ./frontend/dist
+	npx @hexlet/chat-server -s ./frontend/dist
 
 .PHONY: install build start
