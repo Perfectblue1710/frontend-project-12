@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children }) => {
   
   console.log('ProtectedRoute', { isAuthenticated });
   
-  // Если не авторизован - редирект на логин
+
   if (!isAuthenticated) {
     console.log('Redirecting to /login');
     return <Navigate to="/login" replace />;

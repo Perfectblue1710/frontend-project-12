@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
@@ -16,8 +16,8 @@ const Login = () => {
   const { error, loading } = useSelector((state) => state.auth);
 
   const validationSchema = Yup.object({
-    username: Yup.string().required(t('errors.required')),
-    password: Yup.string().required(t('errors.required')),
+    username: Yup.string().required('Обязательное поле'),
+    password: Yup.string().required('Обязательное поле'),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
@@ -25,23 +25,18 @@ const Login = () => {
     dispatch(setLoading(true));
     
     try {
-      const response = await authAPI.login(values.username, values.password);
-      const { token } = response.data;
-      dispatch(setToken(token));
-      toast.success(`Добро пожаловать, ${values.username}!`);
-      navigate('/');
+const response = await authAPI.login(values.username, values.password);
+const { token } = response.data;
+dispatch(setToken(token));
+navigate('/');
     } catch (err) {
       console.error('Login error:', err);
       if (err.response && err.response.status === 401) {
-        const errorMsg = t('errors.invalidCredentials');
-        dispatch(setError(errorMsg));
-        toast.error(errorMsg);
-      } else if (err.code === 'ERR_NETWORK') {
-        const errorMsg = t('toasts.networkError');
+        const errorMsg = 'Неверные имя пользователя или пароль';
         dispatch(setError(errorMsg));
         toast.error(errorMsg);
       } else {
-        const errorMsg = t('errors.serverError');
+        const errorMsg = 'Ошибка сервера. Попробуйте позже.';
         dispatch(setError(errorMsg));
         toast.error(errorMsg);
       }
@@ -56,7 +51,7 @@ const Login = () => {
       <Row className="justify-content-md-center">
         <Col md={6}>
           <div className="bg-light p-4 rounded shadow">
-            <h2 className="text-center mb-4">{t('auth.loginTitle')}</h2>
+            <h2 className="text-center mb-4">Вход в чат</h2>
             
             {error && (
               <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
@@ -69,32 +64,44 @@ const Login = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({ isSubmitting, errors, touched }) => (
+              {({ isSubmitting, errors, touched, handleChange, handleBlur }) => (
                 <Form>
                   <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>{t('auth.usernameLogin')}</BootstrapForm.Label>
+                    <BootstrapForm.Label>Ваш ник</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="text"
                       name="username"
-                      placeholder={t('auth.usernamePlaceholder')}
-                      isInvalid={touched.username && errors.username}
+                      placeholder="Введите имя пользователя"
+                      isInvalid={errors.username && touched.username}
                       disabled={loading}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                     />
-                    <ErrorMessage name="username" component={BootstrapForm.Text} className="text-danger" />
+                    {errors.username && touched.username && (
+                      <div className="text-danger" style={{ fontSize: '0.875em', marginTop: '0.25rem' }}>
+                        {errors.username}
+                      </div>
+                    )}
                   </BootstrapForm.Group>
 
                   <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>{t('auth.password')}</BootstrapForm.Label>
+                    <BootstrapForm.Label>Пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="password"
                       name="password"
-                      placeholder={t('auth.passwordPlaceholder')}
-                      isInvalid={touched.password && errors.password}
+                      placeholder="Введите пароль"
+                      isInvalid={errors.password && touched.password}
                       disabled={loading}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                     />
-                    <ErrorMessage name="password" component={BootstrapForm.Text} className="text-danger" />
+                    {errors.password && touched.password && (
+                      <div className="text-danger" style={{ fontSize: '0.875em', marginTop: '0.25rem' }}>
+                        {errors.password}
+                      </div>
+                    )}
                   </BootstrapForm.Group>
 
                   <Button
@@ -103,20 +110,16 @@ const Login = () => {
                     disabled={isSubmitting || loading}
                     className="w-100 mb-3"
                   >
-                    {loading ? t('auth.loggingIn') : t('auth.loginButton')}
+                    {loading ? 'Вход...' : 'Войти'}
                   </Button>
                   
+                  {/* ССЫЛКА НА РЕГИСТРАЦИЮ */}
                   <div className="text-center">
-                    <Link to="/signup">{t('auth.noAccount')}</Link>
-                  </div>
-                  
-                  {/* Дополнительная ссылка для теста Playwright */}
-                  <div className="text-center mt-2" style={{ display: 'none' }} aria-hidden="true">
-                    <Link to="/signup" id="test-register-link">Регистрация</Link>
+                    <Link to="/signup">Нет аккаунта? Зарегистрируйтесь</Link>
                   </div>
                   
                   <div className="text-center mt-2 text-muted">
-                    <small>{t('auth.testCredentials')}</small>
+                    <small>Тестовые данные: admin / admin</small>
                   </div>
                 </Form>
               )}

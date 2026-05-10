@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap';
@@ -16,33 +16,34 @@ const Signup = () => {
 
   const validationSchema = Yup.object({
     username: Yup.string()
-      .min(3, t('errors.usernameMin'))
-      .max(20, t('errors.usernameMax'))
-      .required(t('errors.required')),
+      .min(3, 'От 3 до 20 символов')
+      .max(20, 'От 3 до 20 символов')
+      .required('Обязательное поле'),
     password: Yup.string()
-      .min(6, t('errors.passwordMin'))
-      .required(t('errors.required')),
+      .min(6, 'Не менее 6 символов')
+      .required('Обязательное поле'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), null], t('errors.passwordsNotMatch'))
-      .required(t('errors.required')),
+      .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
+      .required('Обязательное поле'),
   });
 
   const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
     setServerError(null);
     
     try {
-      const response = await authAPI.signup(values.username, values.password);
-      const { token } = response.data;
-      dispatch(setToken(token));
-      navigate('/');
+const response = await authAPI.signup(values.username, values.password);
+const { token } = response.data;
+dispatch(setToken(token));
+navigate('/')
     } catch (error) {
       console.error('Signup error:', error);
       
       if (error.response && error.response.status === 409) {
-        setServerError(t('errors.userExists'));
-        setFieldError('username', t('errors.userExists'));
+        const errorMsg = 'Пользователь с таким именем уже существует';
+        setServerError(errorMsg);
+        setFieldError('username', errorMsg);
       } else {
-        setServerError(t('errors.serverError'));
+        setServerError('Ошибка сервера. Попробуйте позже.');
       }
     } finally {
       setSubmitting(false);
@@ -54,7 +55,7 @@ const Signup = () => {
       <Row className="justify-content-md-center">
         <Col md={6}>
           <div className="bg-light p-4 rounded shadow">
-            <h2 className="text-center mb-4">{t('auth.signupTitle')}</h2>
+            <h2 className="text-center mb-4">Регистрация</h2>
             
             {serverError && (
               <Alert variant="danger" onClose={() => setServerError(null)} dismissible>
@@ -70,46 +71,69 @@ const Signup = () => {
               }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
+              validateOnChange={true}
+              validateOnBlur={true}
             >
-              {({ isSubmitting, errors, touched }) => (
+              {({ isSubmitting, errors, touched, handleChange, handleBlur }) => (
                 <Form>
+                  {}
                   <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>{t('auth.username')}</BootstrapForm.Label>
+                    <BootstrapForm.Label>Имя пользователя</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="text"
                       name="username"
-                      placeholder={t('auth.usernamePlaceholder')}
-                      isInvalid={touched.username && errors.username}
+                      placeholder="Введите имя пользователя"
+                      isInvalid={errors.username && touched.username}
                       disabled={isSubmitting}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                     />
-                    <ErrorMessage name="username" component={BootstrapForm.Text} className="text-danger" />
+                    {errors.username && touched.username && (
+                      <div className="text-danger" style={{ fontSize: '0.875em', marginTop: '0.25rem' }}>
+                        {errors.username}
+                      </div>
+                    )}
                   </BootstrapForm.Group>
 
+                  {}
                   <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>{t('auth.password')}</BootstrapForm.Label>
+                    <BootstrapForm.Label>Пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="password"
                       name="password"
-                      placeholder={t('auth.passwordPlaceholder')}
-                      isInvalid={touched.password && errors.password}
+                      placeholder="Введите пароль"
+                      isInvalid={errors.password && touched.password}
                       disabled={isSubmitting}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                     />
-                    <ErrorMessage name="password" component={BootstrapForm.Text} className="text-danger" />
+                    {errors.password && touched.password && (
+                      <div className="text-danger" style={{ fontSize: '0.875em', marginTop: '0.25rem' }}>
+                        {errors.password}
+                      </div>
+                    )}
                   </BootstrapForm.Group>
 
+                  {}
                   <BootstrapForm.Group className="mb-3">
-                    <BootstrapForm.Label>{t('auth.confirmPassword')}</BootstrapForm.Label>
+                    <BootstrapForm.Label>Подтвердите пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="password"
                       name="confirmPassword"
-                      placeholder={t('auth.confirmPasswordPlaceholder')}
-                      isInvalid={touched.confirmPassword && errors.confirmPassword}
+                      placeholder="Подтвердите пароль"
+                      isInvalid={errors.confirmPassword && touched.confirmPassword}
                       disabled={isSubmitting}
+                      onChange={handleChange}
+                      onBlur={handleBlur}
                     />
-                    <ErrorMessage name="confirmPassword" component={BootstrapForm.Text} className="text-danger" />
+                    {errors.confirmPassword && touched.confirmPassword && (
+                      <div className="text-danger" style={{ fontSize: '0.875em', marginTop: '0.25rem' }}>
+                        {errors.confirmPassword}
+                      </div>
+                    )}
                   </BootstrapForm.Group>
 
                   <Button
@@ -118,11 +142,12 @@ const Signup = () => {
                     disabled={isSubmitting}
                     className="w-100 mb-3"
                   >
-                    {isSubmitting ? t('auth.signingUp') : t('auth.signupButton')}
+                    {isSubmitting ? 'Регистрация...' : 'Зарегистрироваться'}
                   </Button>
                   
+                  {}
                   <div className="text-center">
-                    <Link to="/login">{t('auth.hasAccount')}</Link>
+                    <Link to="/login">Уже есть аккаунт? Войдите</Link>
                   </div>
                 </Form>
               )}
