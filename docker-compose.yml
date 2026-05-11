@@ -8,4 +8,4 @@ services:
     environment:
       - NODE_ENV=production
       - PORT=5001
-    command: make start
+    command: sh -c "make start"
