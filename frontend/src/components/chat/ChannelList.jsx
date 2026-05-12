@@ -9,8 +9,13 @@ const ChannelList = () => {
 
   if (!isAuthenticated) return null;
 
-  // Если каналов нет, показываем дефолтный
-  const displayChannels = channels.length > 0 ? channels : [{ id: 1, name: 'general' }];
+  // ПРИНУДИТЕЛЬНО добавляем канал general, если его нет
+  let displayChannels = channels;
+  if (!displayChannels || displayChannels.length === 0) {
+    displayChannels = [{ id: 1, name: 'general' }];
+  } else if (!displayChannels.some(ch => ch.name === 'general')) {
+    displayChannels = [{ id: 1, name: 'general' }, ...displayChannels];
+  }
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -25,6 +30,7 @@ const ChannelList = () => {
             action
             active={channel.id === currentChannelId}
             onClick={() => dispatch(setCurrentChannel(channel.id))}
+            style={{ cursor: 'pointer' }}
           >
             # {channel.name}
           </ListGroup.Item>

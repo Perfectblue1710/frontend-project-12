@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { channelsAPI } from '../services/api';
 
-// Асинхронные действия
 export const fetchChannels = createAsyncThunk(
   'channels/fetchChannels',
   async (_, { rejectWithValue }) => {
@@ -67,7 +66,6 @@ const channelsSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
-    // WebSocket события
     addChannel: (state, action) => {
       state.channels.push(action.payload);
     },
@@ -88,23 +86,28 @@ const channelsSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch channels
       .addCase(fetchChannels.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
         state.loading = false;
-        state.channels = action.payload;
-        if (!state.currentChannelId && action.payload.length > 0) {
-          state.currentChannelId = action.payload[0].id;
+        // Если сервер вернул пустой массив или нет general, добавляем его
+        let channels = action.payload;
+        if (!channels || channels.length === 0) {
+          channels = [{ id: 1, name: 'general' }];
+        } else if (!channels.some(ch => ch.name === 'general')) {
+          channels = [{ id: 1, name: 'general' }, ...channels];
+        }
+        state.channels = channels;
+        if (!state.currentChannelId && channels.length > 0) {
+          state.currentChannelId = channels[0].id;
         }
       })
       .addCase(fetchChannels.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })
-      // Create channel
       .addCase(createChannel.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -118,7 +121,6 @@ const channelsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Rename channel
       .addCase(renameChannel.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -135,7 +137,6 @@ const channelsSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Delete channel
       .addCase(deleteChannel.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -155,12 +156,5 @@ const channelsSlice = createSlice({
   },
 });
 
-export const { 
-  setCurrentChannel, 
-  clearError, 
-  addChannel, 
-  removeChannel, 
-  renameChannelWS 
-} = channelsSlice.actions;
-
+export const { setCurrentChannel, clearError, addChannel, removeChannel, renameChannelWS } = channelsSlice.actions;
 export default channelsSlice.reducer;
