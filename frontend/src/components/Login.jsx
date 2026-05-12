@@ -9,6 +9,7 @@ import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react
 import { setToken, setError, setLoading, clearError } from '../store/authSlice';
 import { authAPI } from '../services/api';
 
+
 const Login = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -20,16 +21,12 @@ const Login = () => {
     password: Yup.string().required('Обязательное поле'),
   });
 
-  const handleSubmit = async (values, { setSubmitting }) => {
-    dispatch(clearError());
-    dispatch(setLoading(true));
-    
-    
-    try {
-const response = await authAPI.login(values.username, values.password);
-const { token } = response.data;
-dispatch(setToken(token));
-navigate('/');
+const handleSubmit = async (values, { setSubmitting }) => {
+  try {
+    const response = await authAPI.login(values.username, values.password);
+    const { token } = response.data;
+    dispatch(setToken(token));
+    navigate('/'); 
     } catch (err) {
       console.error('Login error:', err);
       if (err.response && err.response.status === 401) {

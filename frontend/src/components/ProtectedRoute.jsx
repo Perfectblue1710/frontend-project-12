@@ -4,15 +4,10 @@ import { useSelector } from 'react-redux';
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useSelector((state) => state.auth);
   
-  console.log('ProtectedRoute', { isAuthenticated });
-  
-
   if (!isAuthenticated) {
-    console.log('Redirecting to /login');
     return <Navigate to="/login" replace />;
   }
   
-  console.log('Rendering protected content');
   return children;
 };
 

@@ -7,7 +7,6 @@ const api = axios.create({
   },
 });
 
-// Добавляем токен в заголовки, если он есть
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -15,9 +14,9 @@ api.interceptors.request.use((config) => {
   }
   return config;
 });
-
 export const authAPI = {
   login: (username, password) => api.post('/v1/login', { username, password }),
+  signup: (username, password) => api.post('/v1/signup', { username, password }),
 };
 
 export default api;

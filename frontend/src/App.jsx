@@ -97,29 +97,16 @@ function App() {
     <BrowserRouter>
       <div className="d-flex flex-column h-100">
         <Header />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ProtectedRoute>
-                <ChatPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/login"
-            element={
-              isAuthenticated ? <Navigate to="/" replace /> : <Login />
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              isAuthenticated ? <Navigate to="/" replace /> : <Signup />
-            }
-          />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+<Routes>
+  <Route path="/" element={
+    <ProtectedRoute>
+      <ChatPage />
+    </ProtectedRoute>
+  } />
+  <Route path="/login" element={<Login />} />
+  <Route path="/signup" element={<Signup />} />
+  <Route path="*" element={<NotFound />} />
+</Routes>
       </div>
       <ToastContainer
         position="top-right"

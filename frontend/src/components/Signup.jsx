@@ -26,15 +26,12 @@ const Signup = () => {
       .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
       .required('Обязательное поле'),
   });
-
-  const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
-    setServerError(null);
-    
-    try {
-const response = await authAPI.signup(values.username, values.password);
-const { token } = response.data;
-dispatch(setToken(token));
-navigate('/')
+const handleSubmit = async (values, { setSubmitting }) => {
+  try {
+    const response = await authAPI.signup(values.username, values.password);
+    const { token } = response.data;
+    dispatch(setToken(token));
+    navigate('/');
     } catch (error) {
       console.error('Signup error:', error);
       
