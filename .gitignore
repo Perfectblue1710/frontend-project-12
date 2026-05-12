@@ -11,3 +11,11 @@ yarn-error.log*
 .vite
 .vscode
 .idea
+
+# Test artifacts
+__tests__/
+test-results/
+playwright-report/
+*.zip
+test-failed-*.png
+trace.zip
