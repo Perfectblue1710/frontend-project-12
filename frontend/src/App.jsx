@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -21,30 +21,25 @@ import MessageForm from './components/chat/MessageForm';
 import { Container, Row, Col } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-
-
 const ChatPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
   const { loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
   const { loading: messagesLoading } = useSelector((state) => state.messages);
-  
-
 
   useWebSocket();
 
   useEffect(() => {
     if (!isAuthenticated) return;
-    
-    
-  const loadData = async () => {
+
+    const loadData = async () => {
       try {
         await dispatch(fetchChannels()).unwrap();
         dispatch(setMessagesLoading(true));
         const messagesRes = await messagesAPI.getMessages();
         dispatch(setMessages(messagesRes.data));
-    } catch (error) {
+      } catch (error) {
         console.error('Failed to load data:', error);
         toast.error(t('toasts.loadError'));
         if (error.response?.status === 401) {
@@ -55,7 +50,7 @@ const ChatPage = () => {
         dispatch(setMessagesLoading(false));
       }
     };
-    
+
     loadData();
   }, [isAuthenticated, dispatch, t]);
 
@@ -81,23 +76,23 @@ const ChatPage = () => {
   }
 
   return (
-    <>
-      <Container fluid className="h-100">
-        <Row className="h-100">
-          <Col md={3} className="bg-light border-end p-0" style={{ height: 'calc(100vh - 56px)' }}>
-            <ChannelList />
-          </Col>
-          <Col md={9} className="p-0 d-flex flex-column" style={{ height: 'calc(100vh - 56px)' }}>
-            <MessageList />
-            <MessageForm />
-          </Col>
-        </Row>
-      </Container>
-    </>
+    <Container fluid className="h-100">
+      <Row className="h-100">
+        <Col md={3} className="bg-light border-end p-0" style={{ height: 'calc(100vh - 56px)' }}>
+          <ChannelList />
+        </Col>
+        <Col md={9} className="p-0 d-flex flex-column" style={{ height: 'calc(100vh - 56px)' }}>
+          <MessageList />
+          <MessageForm />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
 function App() {
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
   return (
     <BrowserRouter>
       <div className="d-flex flex-column h-100">
@@ -111,8 +106,18 @@ function App() {
               </ProtectedRoute>
             }
           />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route
+            path="/login"
+            element={
+              isAuthenticated ? <Navigate to="/" replace /> : <Login />
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              isAuthenticated ? <Navigate to="/" replace /> : <Signup />
+            }
+          />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

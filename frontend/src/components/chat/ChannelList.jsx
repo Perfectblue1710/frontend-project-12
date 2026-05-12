@@ -9,7 +9,7 @@ const ChannelList = () => {
 
   if (!isAuthenticated) return null;
 
-  // Если каналов нет – показываем хотя бы general
+  // Если каналов нет, показываем дефолтный
   const displayChannels = channels.length > 0 ? channels : [{ id: 1, name: 'general' }];
 
   return (
@@ -18,14 +18,15 @@ const ChannelList = () => {
         <h5>Каналы</h5>
       </div>
       <ListGroup variant="flush" className="flex-grow-1 overflow-auto">
-        {displayChannels.map((ch) => (
+        {displayChannels.map((channel) => (
           <ListGroup.Item
-            key={ch.id}
+            key={channel.id}
+            as="button"
             action
-            active={ch.id === currentChannelId}
-            onClick={() => dispatch(setCurrentChannel(ch.id))}
+            active={channel.id === currentChannelId}
+            onClick={() => dispatch(setCurrentChannel(channel.id))}
           >
-            # {ch.name}
+            # {channel.name}
           </ListGroup.Item>
         ))}
       </ListGroup>

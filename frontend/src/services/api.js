@@ -9,14 +9,37 @@ const api = axios.create({
   },
 });
 
-// Добавляем токен в заголовки, если он есть
-api.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+// Добавляем токен в заголовки для каждого запроса
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    console.log('Token from localStorage:', token ? 'present' : 'missing');
+    
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+      console.log('Authorization header added');
+    } else {
+      console.warn('No token found');
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
   }
-  return config;
-});
+);
+
+// Обработка ответов
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401) {
+      console.error('Unauthorized! Clearing token...');
+      localStorage.removeItem('token');
+      window.location.href = '/login';
+    }
+    return Promise.reject(error);
+  }
+);
 
 export const authAPI = {
   login: (username, password) => api.post('/v1/login', { username, password }),
