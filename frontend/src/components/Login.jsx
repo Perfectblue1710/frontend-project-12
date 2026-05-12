@@ -115,7 +115,7 @@ navigate('/');
                   
                   {/* ССЫЛКА НА РЕГИСТРАЦИЮ */}
                   <div className="text-center">
-                    <Link to="/signup">Нет аккаунта? Зарегистрируйтесь</Link>
+                    <Link to="/signup">Регистрация</Link>
                   </div>
                   
                   <div className="text-center mt-2 text-muted">
