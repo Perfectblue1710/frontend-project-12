@@ -92,6 +92,7 @@ const channelsSlice = createSlice({
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
         state.loading = false;
+  
         let channels = action.payload;
         if (!channels || channels.length === 0) {
           channels = [{ id: 1, name: 'general' }];
