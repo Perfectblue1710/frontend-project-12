@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -60,6 +60,7 @@ const ChatPage = () => {
     );
   }
 if (channelsError && channels.length === 0) {
+
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
         <div className="text-center">
@@ -88,8 +89,6 @@ if (channelsError && channels.length === 0) {
 };
 
 function App() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-
   return (
     <BrowserRouter>
       <div className="d-flex flex-column h-100">

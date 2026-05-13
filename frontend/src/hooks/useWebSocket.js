@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 import { initSocket, closeSocket } from '../services/socket';
 import { addMessage, setConnectionStatus } from '../slices/messagesSlice';
 import { addChannel, removeChannel, renameChannelWS } from '../slices/channelsSlice';
@@ -75,7 +74,7 @@ export const useWebSocket = () => {
     };
   }, [isAuthenticated, token, dispatch]);
 
-  return socketRef.current;
+  return null;
 };
 
 export default useWebSocket;

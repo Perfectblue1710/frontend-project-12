@@ -28,19 +28,6 @@ api.interceptors.request.use(
   }
 );
 
-// Обработка ответов
-api.interceptors.response.use(
-  (response) => response,
-  (error) => {
-    if (error.response?.status === 401) {
-      console.error('Unauthorized! Clearing token...');
-      localStorage.removeItem('token');
-      window.location.href = '/login';
-    }
-    return Promise.reject(error);
-  }
-);
-
 export const authAPI = {
   login: (username, password) => api.post('/v1/login', { username, password }),
   signup: (username, password) => api.post('/v1/signup', { username, password }),

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { Modal, Form, Button, Alert } from 'react-bootstrap';
-import { Formik, Field, ErrorMessage } from 'formik';
+import { Formik, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { createChannel } from '../../slices/channelsSlice';
 import { containsProfanity, filterProfanity } from '../../utils/profanityFilter';
@@ -18,7 +18,6 @@ const AddChannelModal = ({ show, onHide }) => {
   useEffect(() => {
     if (show) {
       setTimeout(() => inputRef.current?.focus(), 100);
-      setProfanityWarning(false);
     }
   }, [show]);
 
@@ -67,7 +66,7 @@ const AddChannelModal = ({ show, onHide }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} onExited={() => setProfanityWarning(false)} centered>
       <Modal.Header closeButton>
         <Modal.Title>{t('chat.addChannel')}</Modal.Title>
       </Modal.Header>
@@ -84,7 +83,7 @@ const AddChannelModal = ({ show, onHide }) => {
                   ⚠️ Название содержит нецензурные слова. Оно будет отфильтровано.
                 </Alert>
               )}
-              <Form.Group>
+              <Form.Group controlId="modal-add-channel-name">
                 <Form.Label>{t('chat.channelName')}</Form.Label>
                 <Form.Control
                   type="text"

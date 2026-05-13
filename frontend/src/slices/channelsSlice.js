@@ -91,15 +91,15 @@ addChannel: (state, action) => {
     builder
       .addCase(fetchChannels.pending, (state) => {
 state.loading = state.channels.length === 0;
+
         state.error = null;
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
         state.loading = false;
 const channels = action.payload ?? [];
-
         state.channels = channels;
-        if (!state.currentChannelId && channels.length > 0) {
-          state.currentChannelId = channels[0].id;
+        if (!state.currentChannelId || !channels.some((ch) => ch.id === state.currentChannelId)) {
+          state.currentChannelId = channels[0]?.id ?? null;
         }
       })
       .addCase(fetchChannels.rejected, (state, action) => {
@@ -112,11 +112,11 @@ const channels = action.payload ?? [];
       })
       .addCase(createChannel.fulfilled, (state, action) => {
         state.loading = false;
-const channelExists = state.channels.some((ch) => ch.id === action.payload.id);
-if (!channelExists)  {
-  state.channels.push(action.payload);
-}
-      state.currentChannelId = action.payload.id
+        const channelExists = state.channels.some((ch) => ch.id === action.payload.id);
+        if (!channelExists) {
+          state.channels.push(action.payload);
+        }
+        state.currentChannelId = action.payload.id;
       })
       .addCase(createChannel.rejected, (state, action) => {
         state.loading = false;

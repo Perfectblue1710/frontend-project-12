@@ -1,12 +1,10 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentChannel } from '../../slices/channelsSlice';
 import { ListGroup } from 'react-bootstrap';
-
 const ChannelList = () => {
   const dispatch = useDispatch();
   const { channels, currentChannelId } = useSelector((state) => state.channels);
   const { isAuthenticated } = useSelector((state) => state.auth);
-
   if (!isAuthenticated) return null;
 
   let displayChannels = channels;
@@ -16,7 +14,6 @@ const ChannelList = () => {
   } else if (!displayChannels.some((ch) => ch.name === 'general')) {
     displayChannels = [{ id: 1, name: 'general' }, ...displayChannels];
   }
-
   return (
     <div className="h-100 d-flex flex-column">
       <div className="p-3 border-bottom">
@@ -33,6 +30,7 @@ const ChannelList = () => {
             onClick={() => dispatch(setCurrentChannel(channel.id))}
             style={{ cursor: 'pointer' }}
           >
+
             {channel.name}
           </ListGroup.Item>
         ))}
