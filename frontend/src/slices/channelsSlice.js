@@ -92,7 +92,6 @@ const channelsSlice = createSlice({
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
         state.loading = false;
-        // Если сервер вернул пустой массив или нет general, добавляем его
         let channels = action.payload;
         if (!channels || channels.length === 0) {
           channels = [{ id: 1, name: 'general' }];

@@ -1,6 +1,5 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { setCurrentChannel } from '../../slices/channelsSlice';
-import { ListGroup } from 'react-bootstrap';
 
 const ChannelList = () => {
   const dispatch = useDispatch();
@@ -9,7 +8,6 @@ const ChannelList = () => {
 
   if (!isAuthenticated) return null;
 
-  // ПРИНУДИТЕЛЬНО добавляем канал general, если его нет
   let displayChannels = channels;
   if (!displayChannels || displayChannels.length === 0) {
     displayChannels = [{ id: 1, name: 'general' }];
@@ -22,20 +20,26 @@ const ChannelList = () => {
       <div className="p-3 border-bottom">
         <h5>Каналы</h5>
       </div>
-      <ListGroup variant="flush" className="flex-grow-1 overflow-auto">
+      <div className="flex-grow-1 overflow-auto">
         {displayChannels.map((channel) => (
-          <ListGroup.Item
+          <button
             key={channel.id}
-            as="button"
-            action
-            active={channel.id === currentChannelId}
             onClick={() => dispatch(setCurrentChannel(channel.id))}
-            style={{ cursor: 'pointer' }}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: '0.5rem 1rem',
+              textAlign: 'left',
+              background: channel.id === currentChannelId ? '#0d6efd' : 'transparent',
+              color: channel.id === currentChannelId ? 'white' : '#212529',
+              border: 'none',
+              cursor: 'pointer'
+            }}
           >
             # {channel.name}
-          </ListGroup.Item>
+          </button>
         ))}
-      </ListGroup>
+      </div>
     </div>
   );
 };
