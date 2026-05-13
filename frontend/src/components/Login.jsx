@@ -27,9 +27,7 @@ const handleSubmit = async (values, { setSubmitting }) => {
     } catch (err) {
       console.error('Login error:', err);
       if (err.response && err.response.status === 401) {
-        const errorMsg = 'Неверные имя пользователя или пароль';
-        dispatch(setError(errorMsg));
-        toast.error(errorMsg);
+        dispatch(setError('Неверные имя пользователя или пароль'));
       } else {
         const errorMsg = 'Ошибка сервера. Попробуйте позже.';
         dispatch(setError(errorMsg));
