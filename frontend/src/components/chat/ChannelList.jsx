@@ -10,9 +10,10 @@ const ChannelList = () => {
   if (!isAuthenticated) return null;
 
   let displayChannels = channels;
+
   if (!displayChannels || displayChannels.length === 0) {
     displayChannels = [{ id: 1, name: 'general' }];
-  } else if (!displayChannels.some(ch => ch.name === 'general')) {
+  } else if (!displayChannels.some((ch) => ch.name === 'general')) {
     displayChannels = [{ id: 1, name: 'general' }, ...displayChannels];
   }
 
@@ -21,6 +22,7 @@ const ChannelList = () => {
       <div className="p-3 border-bottom">
         <h5>Каналы</h5>
       </div>
+
       <ListGroup variant="flush" className="flex-grow-1 overflow-auto">
         {displayChannels.map((channel) => (
           <ListGroup.Item
@@ -31,7 +33,7 @@ const ChannelList = () => {
             onClick={() => dispatch(setCurrentChannel(channel.id))}
             style={{ cursor: 'pointer' }}
           >
-            # {channel.name}
+            {channel.name}
           </ListGroup.Item>
         ))}
       </ListGroup>

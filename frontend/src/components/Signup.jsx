@@ -6,7 +6,9 @@ import * as Yup from 'yup';
 import { useTranslation } from 'react-i18next';
 import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap';
 import { setToken } from '../store/authSlice';
+import { fetchChannels } from '../slices/channelsSlice';
 import { authAPI } from '../services/api';
+
 
 const Signup = () => {
   const { t } = useTranslation();
@@ -26,12 +28,13 @@ const Signup = () => {
       .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
       .required('Обязательное поле'),
   });
-const handleSubmit = async (values, { setSubmitting }) => {
+const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
   try {
     const response = await authAPI.signup(values.username, values.password);
     const { token } = response.data;
-    dispatch(setToken(token));
-    navigate('/');
+dispatch(setToken(token));
+await dispatch(fetchChannels()).unwrap();
+navigate('/');
     } catch (error) {
       console.error('Signup error:', error);
       

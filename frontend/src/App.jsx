@@ -25,9 +25,7 @@ const ChatPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
-  const { loading: messagesLoading } = useSelector((state) => state.messages);
-
+ const { channels, loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
   useWebSocket();
 
   useEffect(() => {
@@ -54,15 +52,14 @@ const ChatPage = () => {
     loadData();
   }, [isAuthenticated, dispatch, t]);
 
-  if (channelsLoading || messagesLoading) {
+  if (channelsLoading && channels.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
         <Spinner animation="border" variant="primary" />
       </div>
     );
   }
-
-  if (channelsError) {
+if (channelsError && channels.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
         <div className="text-center">
@@ -124,4 +121,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 
