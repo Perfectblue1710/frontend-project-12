@@ -8,38 +8,22 @@ const ChannelList = () => {
 
   if (!isAuthenticated) return null;
 
-  let displayChannels = channels;
-  if (!displayChannels || displayChannels.length === 0) {
-    displayChannels = [{ id: 1, name: 'general' }];
-  } else if (!displayChannels.some(ch => ch.name === 'general')) {
-    displayChannels = [{ id: 1, name: 'general' }, ...displayChannels];
-  }
-
+  // ВСЕГДА показываем general, независимо от channels
   return (
-    <div className="h-100 d-flex flex-column">
-      <div className="p-3 border-bottom">
-        <h5>Каналы</h5>
-      </div>
-      <div className="flex-grow-1 overflow-auto">
-        {displayChannels.map((channel) => (
-          <button
-            key={channel.id}
-            onClick={() => dispatch(setCurrentChannel(channel.id))}
-            style={{
-              display: 'block',
-              width: '100%',
-              padding: '0.5rem 1rem',
-              textAlign: 'left',
-              background: channel.id === currentChannelId ? '#0d6efd' : 'transparent',
-              color: channel.id === currentChannelId ? 'white' : '#212529',
-              border: 'none',
-              cursor: 'pointer'
-            }}
-          >
-            # {channel.name}
-          </button>
-        ))}
-      </div>
+    <div style={{ padding: '1rem' }}>
+      <button
+        onClick={() => dispatch(setCurrentChannel(1))}
+        style={{
+          background: currentChannelId === 1 ? '#0d6efd' : '#e9ecef',
+          color: currentChannelId === 1 ? 'white' : 'black',
+          border: '1px solid #ced4da',
+          padding: '8px 16px',
+          borderRadius: '4px',
+          cursor: 'pointer'
+        }}
+      >
+        general
+      </button>
     </div>
   );
 };
