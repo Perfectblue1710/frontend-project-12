@@ -41,7 +41,7 @@ const RenameChannelModal = ({ show, onHide, channelId, currentName }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} centered animation={false}>
       <Modal.Header closeButton>
         <Modal.Title>{t('chat.renameChannel')}</Modal.Title>
       </Modal.Header>
@@ -53,7 +53,7 @@ const RenameChannelModal = ({ show, onHide, channelId, currentName }) => {
         {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
           <Form onSubmit={handleSubmit}>
             <Modal.Body>
-              <Form.Group>
+              <Form.Group controlId="modal-rename-channel-name">
                 <Form.Label>{t('chat.channelName')}</Form.Label>
                 <Form.Control
                   type="text"
