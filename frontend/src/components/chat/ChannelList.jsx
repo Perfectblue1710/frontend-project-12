@@ -8,7 +8,7 @@ const ChannelList = () => {
 
   if (!isAuthenticated) return null;
 
-  // ВСЕГДА показываем general, независимо от channels
+
   return (
     <div style={{ padding: '1rem' }}>
       <button
