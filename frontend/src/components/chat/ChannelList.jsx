@@ -67,14 +67,15 @@ const ChannelList = () => {
       
       <ListGroup variant="flush" className="flex-grow-1 overflow-auto">
         {channels.map((channel) => (
-          <ListGroup.Item
-            key={channel.id}
-            action
-            active={channel.id === currentChannelId}
-            onClick={() => dispatch(setCurrentChannel(channel.id))}
-            className="d-flex justify-content-between align-items-center"
-          >
-            <span># {channel.name}</span>
+<ListGroup.Item
+  as="button"
+  key={channel.id}
+  active={channel.id === currentChannelId}
+  onClick={() => dispatch(setCurrentChannel(channel.id))}
+  className="d-flex justify-content-between align-items-center"
+>
+  {channel.name}
+
             {channel.id !== 1 && (
               <Dropdown>
                 <Dropdown.Toggle as={Button} variant="link" size="sm" className="p-0 text-muted">
@@ -96,11 +97,9 @@ const ChannelList = () => {
                 </Dropdown.Menu>
               </Dropdown>
             )}
-          </ListGroup.Item>
+            </ListGroup.Item>
         ))}
-      </ListGroup>
-
-      {/* Модальное окно добавления канала */}
+</ListGroup>
       <Modal show={showAddModal} onHide={() => setShowAddModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Добавить канал</Modal.Title>
