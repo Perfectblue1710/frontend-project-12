@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
-  ListGroup,
   Button,
   Modal,
   Form,
@@ -30,13 +29,9 @@ const ChannelList = () => {
     return null;
   }
 
-  let displayChannels = channels;
+  let displayChannels = channels || [];
 
-  if (!displayChannels || displayChannels.length === 0) {
-    displayChannels = [
-      { id: 1, name: 'general' },
-    ];
-  } else if (
+  if (
     !displayChannels.some(
       (channel) => channel.name === 'general',
     )
@@ -48,58 +43,50 @@ const ChannelList = () => {
   }
 
   return (
-    <div className="h-100 d-flex flex-column">
-      <div className="p-3 border-bottom d-flex justify-content-between align-items-center">
-        <h5 className="mb-0">Каналы</h5>
+    <div>
+      <div className="d-flex justify-content-between p-2">
+        <span>Каналы</span>
 
-        <Button
-          variant="outline-primary"
-          size="sm"
+        <button
+          type="button"
           onClick={() => setShowModal(true)}
         >
           +
-        </Button>
+        </button>
       </div>
 
-      <ListGroup
-        variant="flush"
-        className="flex-grow-1 overflow-auto"
-      >
+      <div className="d-flex flex-column">
         {displayChannels.map((channel) => (
-          <ListGroup.Item
+          <button
             key={channel.id}
-            as="button"
-            action
-            active={channel.id === currentChannelId}
+            type="button"
             onClick={() =>
-              dispatch(setCurrentChannel(channel.id))
+              dispatch(
+                setCurrentChannel(channel.id),
+              )
             }
-            className="text-start"
+            className={
+              channel.id === currentChannelId
+                ? 'btn btn-primary'
+                : 'btn btn-light'
+            }
           >
             {channel.name}
-          </ListGroup.Item>
+          </button>
         ))}
-      </ListGroup>
+      </div>
 
       <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
-        centered
       >
-        <Modal.Header closeButton>
-          <Modal.Title>
-            Добавить канал
-          </Modal.Title>
-        </Modal.Header>
-
         <Formik
           initialValues={{ name: '' }}
-          onSubmit={async (values, { resetForm }) => {
+          onSubmit={async (values) => {
             await dispatch(
               createChannel(values.name),
             );
 
-            resetForm();
             setShowModal(false);
           }}
         >
@@ -114,18 +101,9 @@ const ChannelList = () => {
               </Modal.Body>
 
               <Modal.Footer>
-                <Button
-                  variant="secondary"
-                  onClick={() =>
-                    setShowModal(false)
-                  }
-                >
-                  Отмена
-                </Button>
-
-                <Button type="submit">
+                <button type="submit">
                   Отправить
-                </Button>
+                </button>
               </Modal.Footer>
             </Form>
           )}
