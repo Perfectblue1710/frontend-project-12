@@ -161,7 +161,7 @@ const ChannelList = () => {
         </Formik>
       </Modal>
 
-      <Modal show={showRenameModal} onHide={() => setShowRenameModal(false)} centered>
+          <Modal show={showRenameModal} onHide={() => setShowRenameModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Переименовать канал</Modal.Title>
         </Modal.Header>
