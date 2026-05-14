@@ -94,41 +94,36 @@ const ChannelList = () => {
 
       <ListGroup variant="flush" className="flex-grow-1 overflow-auto">
         {displayChannels.map((channel) => (
-          <ListGroup.Item
-            key={channel.id}
-            className="d-flex justify-content-between align-items-center p-0"
-          >
+          <div key={channel.id} className="d-flex align-items-stretch w-100">
             <button
               type="button"
               className={`btn w-100 text-start rounded-0 ${
                 channel.id === currentChannelId ? 'btn-primary' : 'btn-light'
               }`}
               onClick={() => dispatch(setCurrentChannel(channel.id))}
-              style={{ flex: 1, textAlign: 'left', padding: '0.75rem 1rem' }}
+              style={{ padding: '0.75rem 1rem' }}
             >
               # {channel.name}
             </button>
 
             {channel.id !== 1 && (
               <Dropdown>
-  <Dropdown.Toggle
-  as={Button}
-  variant="link"
-  size="sm"
-  className="p-0 text-muted"
->
-  <span className="visually-hidden">Управление каналом</span>
-  ⋮
-</Dropdown.Toggle>
+                <Dropdown.Toggle
+                  variant="light"
+                  size="sm"
+                  className="rounded-0"
+                  aria-label="Управление каналом"
+                  style={{ padding: '0.75rem 0.5rem' }}
+                >
+                  ⋮
+                </Dropdown.Toggle>
                 <Dropdown.Menu>
-<Dropdown.Item
-  onClick={() => {
-    setSelectedChannel(channel);
-    setShowRenameModal(true);
-  }}
->
-  Переименовать
-</Dropdown.Item>
+                  <Dropdown.Item onClick={() => {
+                    setSelectedChannel(channel);
+                    setShowRenameModal(true);
+                  }}>
+                    Переименовать
+                  </Dropdown.Item>
                   <Dropdown.Item
                     className="text-danger"
                     onClick={() => {
@@ -141,7 +136,7 @@ const ChannelList = () => {
                 </Dropdown.Menu>
               </Dropdown>
             )}
-          </ListGroup.Item>
+          </div>
         ))}
       </ListGroup>
 
