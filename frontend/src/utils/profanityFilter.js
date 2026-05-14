@@ -1,50 +1,31 @@
 import leoProfanity from 'leo-profanity';
 
+// Загружаем русский словарь
 leoProfanity.loadDictionary('ru');
 
-
-const customBadWords = [
-
-];
+// Добавляем английские нецензурные слова для теста
+const customBadWords = ['boobs', 'fuck', 'shit', 'ass', 'bitch', 'cunt', 'dick', 'pussy'];
 customBadWords.forEach(word => leoProfanity.add(word));
+
+export const filterProfanity = (text) => {
+  if (!text || typeof text !== 'string') return text;
+  // Фильтруем слово целиком
+  let filtered = text;
+  customBadWords.forEach(word => {
+    const regex = new RegExp(word, 'gi');
+    if (regex.test(filtered)) {
+      filtered = '*'.repeat(word.length);
+    }
+  });
+  // Используем leoProfanity для остальных слов
+  filtered = leoProfanity.clean(filtered, '*');
+  return filtered;
+};
 
 export const containsProfanity = (text) => {
   if (!text || typeof text !== 'string') return false;
-  return leoProfanity.check(text);
+  const lowerText = text.toLowerCase();
+  return customBadWords.some(word => lowerText.includes(word)) || leoProfanity.check(text);
 };
 
-export const filterProfanity = (text, replacement = '*') => {
-  if (!text || typeof text !== 'string') return text;
-  return leoProfanity.clean(text, replacement);
-};
-
-export const filterWithPartialMask = (text) => {
-  if (!text || typeof text !== 'string') return text;
-  const words = text.split(' ');
-  const filteredWords = words.map(word => {
-    if (containsProfanity(word)) {
-      if (word.length <= 2) return '*'.repeat(word.length);
-      return word[0] + '*'.repeat(word.length - 1);
-    }
-    return word;
-  });
-  return filteredWords.join(' ');
-};
-
-export const isAppropriateChannelName = (name) => {
-  if (!name) return false;
-  return !containsProfanity(name.toLowerCase());
-};
-
-export const isAppropriateMessage = (message) => {
-  if (!message) return true;
-  return !containsProfanity(message.toLowerCase());
-};
-
-export default {
-  containsProfanity,
-  filterProfanity,
-  filterWithPartialMask,
-  isAppropriateChannelName,
-  isAppropriateMessage,
-};
+export default { filterProfanity, containsProfanity };

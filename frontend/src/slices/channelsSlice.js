@@ -18,11 +18,14 @@ export const createChannel = createAsyncThunk(
   'channels/createChannel',
   async (name, { rejectWithValue }) => {
     try {
-      // Фильтруем нецензурные слова в названии канала
+      console.log('Original channel name:', name);
       const filteredName = filterProfanity(name);
+      console.log('Filtered channel name:', filteredName);
       const response = await channelsAPI.createChannel(filteredName);
+      console.log('Channel created:', response.data);
       return response.data;
     } catch (error) {
+      console.error('Create channel error:', error);
       return rejectWithValue(error.response?.data || error.message);
     }
   }
@@ -71,6 +74,7 @@ const channelsSlice = createSlice({
       state.error = null;
     },
     addChannel: (state, action) => {
+      console.log('Adding channel to state:', action.payload);
       state.channels.push(action.payload);
     },
     removeChannel: (state, action) => {
@@ -117,12 +121,14 @@ const channelsSlice = createSlice({
       })
       .addCase(createChannel.fulfilled, (state, action) => {
         state.loading = false;
+        console.log('Create channel fulfilled:', action.payload);
         state.channels.push(action.payload);
         state.currentChannelId = action.payload.id;
       })
       .addCase(createChannel.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
+        console.error('Create channel rejected:', action.payload);
       })
       .addCase(renameChannel.pending, (state) => {
         state.loading = true;
