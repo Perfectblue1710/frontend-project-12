@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { channelsAPI } from '../services/api';
+import { filterProfanity } from '../utils/profanityFilter';
 
 export const fetchChannels = createAsyncThunk(
   'channels/fetchChannels',
@@ -17,7 +18,9 @@ export const createChannel = createAsyncThunk(
   'channels/createChannel',
   async (name, { rejectWithValue }) => {
     try {
-      const response = await channelsAPI.createChannel(name);
+      // Фильтруем нецензурные слова в названии канала
+      const filteredName = filterProfanity(name);
+      const response = await channelsAPI.createChannel(filteredName);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -29,7 +32,8 @@ export const renameChannel = createAsyncThunk(
   'channels/renameChannel',
   async ({ id, name }, { rejectWithValue }) => {
     try {
-      const response = await channelsAPI.renameChannel(id, name);
+      const filteredName = filterProfanity(name);
+      const response = await channelsAPI.renameChannel(id, filteredName);
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message);
@@ -66,12 +70,9 @@ const channelsSlice = createSlice({
     clearError: (state) => {
       state.error = null;
     },
-addChannel: (state, action) => {
-  const channelExists = state.channels.some((ch) => ch.id === action.payload.id);
-  if (!channelExists) {
-    state.channels.push(action.payload);
-  }
-},
+    addChannel: (state, action) => {
+      state.channels.push(action.payload);
+    },
     removeChannel: (state, action) => {
       const channelId = action.payload;
       state.channels = state.channels.filter(ch => ch.id !== channelId);
@@ -90,16 +91,20 @@ addChannel: (state, action) => {
   extraReducers: (builder) => {
     builder
       .addCase(fetchChannels.pending, (state) => {
-state.loading = state.channels.length === 0;
-
+        state.loading = true;
         state.error = null;
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
         state.loading = false;
-const channels = action.payload ?? [];
+        let channels = action.payload;
+        if (!channels || channels.length === 0) {
+          channels = [{ id: 1, name: 'general' }];
+        } else if (!channels.some(ch => ch.name === 'general')) {
+          channels = [{ id: 1, name: 'general' }, ...channels];
+        }
         state.channels = channels;
-        if (!state.currentChannelId || !channels.some((ch) => ch.id === state.currentChannelId)) {
-          state.currentChannelId = channels[0]?.id ?? null;
+        if (!state.currentChannelId && channels.length > 0) {
+          state.currentChannelId = channels[0].id;
         }
       })
       .addCase(fetchChannels.rejected, (state, action) => {
@@ -112,10 +117,7 @@ const channels = action.payload ?? [];
       })
       .addCase(createChannel.fulfilled, (state, action) => {
         state.loading = false;
-        const channelExists = state.channels.some((ch) => ch.id === action.payload.id);
-        if (!channelExists) {
-          state.channels.push(action.payload);
-        }
+        state.channels.push(action.payload);
         state.currentChannelId = action.payload.id;
       })
       .addCase(createChannel.rejected, (state, action) => {

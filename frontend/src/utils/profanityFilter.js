@@ -1,11 +1,10 @@
 import leoProfanity from 'leo-profanity';
 
-// Загружаем русский словарь
 leoProfanity.loadDictionary('ru');
 
-// Добавляем дополнительные слова (опционально)
+
 const customBadWords = [
-  // свои слова, если нужно
+
 ];
 customBadWords.forEach(word => leoProfanity.add(word));
 
