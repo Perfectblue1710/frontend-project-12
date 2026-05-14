@@ -176,48 +176,48 @@ const ChannelList = () => {
         </Formik>
       </Modal>
 
-      {/* Модальное окно переименования канала */}
-      <Modal show={showRenameModal} onHide={() => setShowRenameModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Переименовать канал</Modal.Title>
-        </Modal.Header>
-        {selectedChannel && (
-          <Formik
-            initialValues={{ name: selectedChannel.name }}
-            validationSchema={renameChannelSchema}
-            onSubmit={handleRenameChannel}
-          >
-            {({ handleSubmit, isSubmitting }) => (
-              <Form onSubmit={handleSubmit}>
-                <Modal.Body>
-                  <Form.Group>
-                    <Form.Label htmlFor="rename-channel">Имя канала</Form.Label>
-                    <Field
-                      as={Form.Control}
-                      id="rename-channel"
-                      type="text"
-                      name="name"
-                      autoFocus
-                      disabled={isSubmitting || loading}
-                    />
-                    <ErrorMessage name="name" component="div" className="text-danger" />
-                  </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={() => setShowRenameModal(false)}>
-                    Отмена
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting || loading}>
-                    Переименовать
-                  </Button>
-                </Modal.Footer>
-              </Form>
-            )}
-          </Formik>
-        )}
-      </Modal>
-
-      {/* Модальное окно удаления канала */}
+    {/* Модальное окно переименования канала */}
+<Modal show={showRenameModal} onHide={() => setShowRenameModal(false)} centered>
+  <Modal.Header closeButton>
+    <Modal.Title>Переименовать канал</Modal.Title>
+  </Modal.Header>
+  {selectedChannel && (
+    <Formik
+      initialValues={{ name: selectedChannel.name }}
+      validationSchema={renameChannelSchema}
+      onSubmit={handleRenameChannel}
+    >
+      {({ handleSubmit, isSubmitting }) => (
+        <Form onSubmit={handleSubmit}>
+          <Modal.Body>
+            <Form.Group>
+              <Form.Label htmlFor="rename-channel-name">Имя канала</Form.Label>
+              <Field
+                as={Form.Control}
+                id="rename-channel-name"
+                type="text"
+                name="name"
+                placeholder="Введите новое имя"
+                disabled={isSubmitting || loading}
+                autoFocus
+              />
+              <ErrorMessage name="name" component="div" className="text-danger" />
+            </Form.Group>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={() => setShowRenameModal(false)}>
+              Отмена
+            </Button>
+            <Button type="submit" disabled={isSubmitting || loading}>
+              Переименовать
+            </Button>
+          </Modal.Footer>
+        </Form>
+      )}
+    </Formik>
+  )}
+</Modal>
+    {/* Модальное окно удаления канала */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Удалить канал</Modal.Title>
