@@ -76,11 +76,7 @@ const ChannelList = () => {
     <div className="h-100 d-flex flex-column">
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
         <h5 className="mb-0">Каналы</h5>
-        <Button 
-          variant="outline-primary" 
-          size="sm" 
-          onClick={() => setShowAddModal(true)}
-        >
+        <Button variant="outline-primary" size="sm" onClick={() => setShowAddModal(true)}>
           +
         </Button>
       </div>
@@ -99,7 +95,12 @@ const ChannelList = () => {
             <span># {channel.name}</span>
             {channel.id !== 1 && (
               <Dropdown onClick={(e) => e.stopPropagation()}>
-                <Dropdown.Toggle as={Button} variant="link" size="sm" className="p-0 text-muted">
+                <Dropdown.Toggle 
+                  as={Button} 
+                  variant="link" 
+                  size="sm" 
+                  className="p-0 text-muted"
+                >
                   ⋮
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
@@ -122,6 +123,7 @@ const ChannelList = () => {
         ))}
       </ListGroup>
 
+      {/* Модальное окно добавления канала */}
       <Modal show={showAddModal} onHide={() => setShowAddModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Добавить канал</Modal.Title>
@@ -135,11 +137,10 @@ const ChannelList = () => {
             <Form onSubmit={handleSubmit}>
               <Modal.Body>
                 <Form.Group>
-                  <Form.Label htmlFor="channel-name">Имя канала</Form.Label>
+                  <Form.Label>Имя канала</Form.Label>
                   <Field
                     as={Form.Control}
                     type="text"
-                    id="channel-name"
                     name="name"
                     placeholder="Введите имя канала"
                     disabled={isSubmitting || loading}
@@ -161,7 +162,8 @@ const ChannelList = () => {
         </Formik>
       </Modal>
 
-          <Modal show={showRenameModal} onHide={() => setShowRenameModal(false)} centered>
+      {/* Модальное окно переименования канала */}
+      <Modal show={showRenameModal} onHide={() => setShowRenameModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Переименовать канал</Modal.Title>
         </Modal.Header>
@@ -175,11 +177,10 @@ const ChannelList = () => {
               <Form onSubmit={handleSubmit}>
                 <Modal.Body>
                   <Form.Group>
-                    <Form.Label htmlFor="rename-channel-name">Имя канала</Form.Label>
+                    <Form.Label>Имя канала</Form.Label>
                     <Field
                       as={Form.Control}
                       type="text"
-                      id="rename-channel-name"
                       name="name"
                       placeholder="Введите новое имя"
                       disabled={isSubmitting || loading}
@@ -202,6 +203,7 @@ const ChannelList = () => {
         )}
       </Modal>
 
+      {/* Модальное окно удаления канала */}
       <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
         <Modal.Header closeButton>
           <Modal.Title>Удалить канал</Modal.Title>
