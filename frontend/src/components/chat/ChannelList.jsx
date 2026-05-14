@@ -31,17 +31,22 @@ const ChannelList = () => {
     name: Yup.string()
       .min(3, 'От 3 до 20 символов')
       .max(20, 'От 3 до 20 символов')
-      .notOneOf(channels.map(ch => ch.name), 'Канал с таким именем уже существует')
+      .notOneOf(
+        channels.filter(ch => ch.id !== selectedChannel?.id).map(ch => ch.name),
+        'Канал с таким именем уже существует'
+      )
       .required('Обязательное поле'),
   });
 
   const handleAddChannel = async (values, { resetForm, setSubmitting }) => {
     try {
-      await dispatch(createChannel(values.name)).unwrap();
+      const result = await dispatch(createChannel(values.name)).unwrap();
+      console.log('Channel created:', result);
       toast.success('Канал создан');
       resetForm();
       setShowAddModal(false);
     } catch (error) {
+      console.error('Create channel error:', error);
       toast.error('Ошибка при создании канала');
     } finally {
       setSubmitting(false);
@@ -50,11 +55,16 @@ const ChannelList = () => {
 
   const handleRenameChannel = async (values, { setSubmitting }) => {
     try {
-      await dispatch(renameChannel({ id: selectedChannel.id, name: values.name })).unwrap();
+      const result = await dispatch(renameChannel({ 
+        id: selectedChannel.id, 
+        name: values.name 
+      })).unwrap();
+      console.log('Channel renamed:', result);
       toast.success('Канал переименован');
       setShowRenameModal(false);
       setSelectedChannel(null);
     } catch (error) {
+      console.error('Rename channel error:', error);
       toast.error('Ошибка при переименовании');
     } finally {
       setSubmitting(false);
@@ -68,6 +78,7 @@ const ChannelList = () => {
       setShowDeleteModal(false);
       setSelectedChannel(null);
     } catch (error) {
+      console.error('Delete channel error:', error);
       toast.error('Ошибка при удалении');
     }
   };
@@ -76,7 +87,11 @@ const ChannelList = () => {
     <div className="h-100 d-flex flex-column">
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
         <h5 className="mb-0">Каналы</h5>
-        <Button variant="outline-primary" size="sm" onClick={() => setShowAddModal(true)}>
+        <Button 
+          variant="outline-primary" 
+          size="sm" 
+          onClick={() => setShowAddModal(true)}
+        >
           +
         </Button>
       </div>
@@ -85,7 +100,6 @@ const ChannelList = () => {
         {displayChannels.map((channel) => (
           <ListGroup.Item
             key={channel.id}
-            as="button"
             action
             active={channel.id === currentChannelId}
             onClick={() => dispatch(setCurrentChannel(channel.id))}
@@ -130,7 +144,13 @@ const ChannelList = () => {
         </Modal.Header>
         <Formik
           initialValues={{ name: '' }}
-          validationSchema={channelSchema}
+          validationSchema={Yup.object({
+            name: Yup.string()
+              .min(3, 'От 3 до 20 символов')
+              .max(20, 'От 3 до 20 символов')
+              .notOneOf(channels.map(ch => ch.name), 'Канал с таким именем уже существует')
+              .required('Обязательное поле'),
+          })}
           onSubmit={handleAddChannel}
         >
           {({ handleSubmit, isSubmitting }) => (
@@ -170,7 +190,16 @@ const ChannelList = () => {
         {selectedChannel && (
           <Formik
             initialValues={{ name: selectedChannel.name }}
-            validationSchema={channelSchema}
+            validationSchema={Yup.object({
+              name: Yup.string()
+                .min(3, 'От 3 до 20 символов')
+                .max(20, 'От 3 до 20 символов')
+                .notOneOf(
+                  channels.filter(ch => ch.id !== selectedChannel.id).map(ch => ch.name),
+                  'Канал с таким именем уже существует'
+                )
+                .required('Обязательное поле'),
+            })}
             onSubmit={handleRenameChannel}
           >
             {({ handleSubmit, isSubmitting }) => (
