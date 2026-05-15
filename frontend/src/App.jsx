@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -25,8 +25,7 @@ const ChatPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
-  const { loading: messagesLoading } = useSelector((state) => state.messages);
+  const { channels, loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
 
   useWebSocket();
 
@@ -54,7 +53,7 @@ const ChatPage = () => {
     loadData();
   }, [isAuthenticated, dispatch, t]);
 
-  if (channelsLoading || messagesLoading) {
+  if (channelsLoading && channels.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
         <Spinner animation="border" variant="primary" />
@@ -62,7 +61,7 @@ const ChatPage = () => {
     );
   }
 
-  if (channelsError) {
+  if (channelsError && channels.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
         <div className="text-center">
@@ -91,8 +90,6 @@ const ChatPage = () => {
 };
 
 function App() {
-  const { isAuthenticated } = useSelector((state) => state.auth);
-
   return (
     <BrowserRouter>
       <div className="d-flex flex-column h-100">

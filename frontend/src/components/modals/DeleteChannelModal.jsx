@@ -18,7 +18,7 @@ const DeleteChannelModal = ({ show, onHide, channelId, channelName }) => {
   };
 
   return (
-    <Modal show={show} onHide={onHide} centered>
+    <Modal show={show} onHide={onHide} centered animation={false}>
       <Modal.Header closeButton>
         <Modal.Title>{t('chat.deleteChannel')}</Modal.Title>
       </Modal.Header>

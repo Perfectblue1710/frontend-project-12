@@ -3,13 +3,12 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { useTranslation } from 'react-i18next';
 import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap';
 import { setToken } from '../store/authSlice';
+import { fetchChannels } from '../slices/channelsSlice';
 import { authAPI } from '../services/api';
 
 const Signup = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [serverError, setServerError] = useState(null);
@@ -26,17 +25,18 @@ const Signup = () => {
       .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
       .required('Обязательное поле'),
   });
-const handleSubmit = async (values, { setSubmitting }) => {
+const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
   try {
     const response = await authAPI.signup(values.username, values.password);
     const { token } = response.data;
     dispatch(setToken(token));
+    await dispatch(fetchChannels()).unwrap();
     navigate('/');
     } catch (error) {
       console.error('Signup error:', error);
       
       if (error.response && error.response.status === 409) {
-        const errorMsg = 'Пользователь с таким именем уже существует';
+        const errorMsg = 'Такой пользователь уже существует';
         setServerError(errorMsg);
         setFieldError('username', errorMsg);
       } else {
@@ -74,7 +74,7 @@ const handleSubmit = async (values, { setSubmitting }) => {
               {({ isSubmitting, errors, touched, handleChange, handleBlur }) => (
                 <Form>
                   {}
-                  <BootstrapForm.Group className="mb-3">
+                  <BootstrapForm.Group className="mb-3" controlId="signup-username">
                     <BootstrapForm.Label>Имя пользователя</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -94,7 +94,7 @@ const handleSubmit = async (values, { setSubmitting }) => {
                   </BootstrapForm.Group>
 
                   {}
-                  <BootstrapForm.Group className="mb-3">
+                  <BootstrapForm.Group className="mb-3" controlId="signup-password">
                     <BootstrapForm.Label>Пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -114,7 +114,7 @@ const handleSubmit = async (values, { setSubmitting }) => {
                   </BootstrapForm.Group>
 
                   {}
-                  <BootstrapForm.Group className="mb-3">
+                  <BootstrapForm.Group className="mb-3" controlId="signup-confirm-password">
                     <BootstrapForm.Label>Подтвердите пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}

@@ -9,6 +9,7 @@ import {
 } from 'react-bootstrap';
 import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { toast } from 'react-toastify';
 
 import {
   setCurrentChannel,
@@ -54,6 +55,7 @@ const ChannelList = () => {
   ) => {
     try {
       await dispatch(createChannel(values.name)).unwrap();
+      toast.success('Канал создан');
 
       resetForm();
       setShowAddModal(false);
@@ -74,6 +76,7 @@ const ChannelList = () => {
         }),
       ).unwrap();
 
+      toast.success('Канал переименован');
       setShowRenameModal(false);
       setSelectedChannel(null);
     } finally {
@@ -85,6 +88,7 @@ const ChannelList = () => {
     try {
       await dispatch(deleteChannel(selectedChannel.id)).unwrap();
 
+      toast.success('Канал удалён');
       setShowDeleteModal(false);
       setSelectedChannel(null);
     } catch (error) {
@@ -129,12 +133,13 @@ const ChannelList = () => {
               {channel.name}
             </Button>
 
-            {channel.id !== 1 && (
+            {channel.removable && (
               <Dropdown align="end">
                 <Dropdown.Toggle
                   variant="link"
                   size="sm"
                   className="text-muted p-0 ms-2 shadow-none"
+                  aria-label="Управление каналом"
                 >
                   ⋮
                 </Dropdown.Toggle>
@@ -170,6 +175,7 @@ const ChannelList = () => {
         show={showAddModal}
         onHide={() => setShowAddModal(false)}
         centered
+        animation={false}
       >
         <Modal.Header closeButton>
           <Modal.Title>Добавить канал</Modal.Title>
@@ -183,7 +189,7 @@ const ChannelList = () => {
           {({ handleSubmit, isSubmitting }) => (
             <Form onSubmit={handleSubmit}>
               <Modal.Body>
-                <Form.Group>
+                <Form.Group controlId="add-channel-name">
                   <Form.Label>Имя канала</Form.Label>
 
                   <Field
@@ -228,6 +234,7 @@ const ChannelList = () => {
         show={showRenameModal}
         onHide={() => setShowRenameModal(false)}
         centered
+        animation={false}
       >
         <Modal.Header closeButton>
           <Modal.Title>Переименовать канал</Modal.Title>
@@ -242,7 +249,7 @@ const ChannelList = () => {
             {({ handleSubmit, isSubmitting }) => (
               <Form onSubmit={handleSubmit}>
                 <Modal.Body>
-                  <Form.Group>
+                  <Form.Group controlId="rename-channel-name">
                     <Form.Label>Имя канала</Form.Label>
 
                     <Field
@@ -288,6 +295,7 @@ const ChannelList = () => {
         show={showDeleteModal}
         onHide={() => setShowDeleteModal(false)}
         centered
+        animation={false}
       >
         <Modal.Header closeButton>
           <Modal.Title>Удалить канал</Modal.Title>

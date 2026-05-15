@@ -1,9 +1,7 @@
-import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
-import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
 import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap';
 import { setToken, setError, setLoading, clearError } from '../store/authSlice';
@@ -11,7 +9,6 @@ import { authAPI } from '../services/api';
 
 
 const Login = () => {
-  const { t } = useTranslation();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { error, loading } = useSelector((state) => state.auth);
@@ -64,7 +61,7 @@ const handleSubmit = async (values, { setSubmitting }) => {
             >
               {({ isSubmitting, errors, touched, handleChange, handleBlur }) => (
                 <Form>
-                  <BootstrapForm.Group className="mb-3">
+                  <BootstrapForm.Group className="mb-3" controlId="login-username">
                     <BootstrapForm.Label>Ваш ник</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -83,7 +80,7 @@ const handleSubmit = async (values, { setSubmitting }) => {
                     )}
                   </BootstrapForm.Group>
 
-                  <BootstrapForm.Group className="mb-3">
+                  <BootstrapForm.Group className="mb-3" controlId="login-password">
                     <BootstrapForm.Label>Пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
