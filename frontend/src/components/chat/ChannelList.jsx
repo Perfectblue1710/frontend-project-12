@@ -106,36 +106,36 @@ const ChannelList = () => {
               # {channel.name}
             </button>
 
-            {channel.id !== 1 && (
-              <Dropdown>
-                <Dropdown.Toggle
-                  variant="light"
-                  size="sm"
-                  className="rounded-0"
-                  aria-label="Управление каналом"
-                  style={{ padding: '0.75rem 0.5rem' }}
-                >
-                  ⋮
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                  <Dropdown.Item onClick={() => {
-                    setSelectedChannel(channel);
-                    setShowRenameModal(true);
-                  }}>
-                    Переименовать
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    className="text-danger"
-                    onClick={() => {
-                      setSelectedChannel(channel);
-                      setShowDeleteModal(true);
-                    }}
-                  >
-                    Удалить
-                  </Dropdown.Item>
-                </Dropdown.Menu>
-              </Dropdown>
-            )}
+{channel.id !== 1 && (
+  <Dropdown>
+    <Dropdown.Toggle
+      variant="light"
+      size="sm"
+      className="rounded-0"
+      style={{ padding: '0.75rem 0.5rem' }}
+    >
+      <span className="visually-hidden">Управление каналом</span>
+      ⋮
+    </Dropdown.Toggle>
+    <Dropdown.Menu>
+      <Dropdown.Item onClick={() => {
+        setSelectedChannel(channel);
+        setShowRenameModal(true);
+      }}>
+        Переименовать
+      </Dropdown.Item>
+      <Dropdown.Item
+        className="text-danger"
+        onClick={() => {
+          setSelectedChannel(channel);
+          setShowDeleteModal(true);
+        }}
+      >
+        Удалить
+      </Dropdown.Item>
+    </Dropdown.Menu>
+  </Dropdown>
+)}
           </div>
         ))}
       </ListGroup>
