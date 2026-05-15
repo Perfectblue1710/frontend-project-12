@@ -74,7 +74,7 @@ const channelsSlice = createSlice({
       state.error = null;
     },
     addChannel: (state, action) => {
-
+      
       const channelExists = state.channels.some((ch) => ch.id === action.payload.id);
       if (!channelExists) {
         state.channels.push(action.payload);
@@ -120,11 +120,8 @@ const channelsSlice = createSlice({
       })
       .addCase(createChannel.fulfilled, (state, action) => {
         state.loading = false;
-        const channelExists = state.channels.some((ch) => ch.id === action.payload.id);
-        if (!channelExists) {
-          state.channels.push(action.payload);
-        }
-
+        console.log('Create channel fulfilled:', action.payload);
+        state.channels.push(action.payload);
         state.currentChannelId = action.payload.id;
       })
       .addCase(createChannel.rejected, (state, action) => {

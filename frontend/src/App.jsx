@@ -25,7 +25,7 @@ const ChatPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
-  const { channels, loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
+ const { channels, loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
 
   useWebSocket();
 
@@ -60,8 +60,8 @@ const ChatPage = () => {
       </div>
     );
   }
+if (channelsError && channels.length === 0) {
 
-  if (channelsError && channels.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
         <div className="text-center">
@@ -121,4 +121,4 @@ function App() {
   );
 }
 
-export default App;
+export default App; 

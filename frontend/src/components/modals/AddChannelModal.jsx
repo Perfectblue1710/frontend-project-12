@@ -66,9 +66,7 @@ const AddChannelModal = ({ show, onHide }) => {
   };
 
   return (
-
-    <Modal show={show} onHide={onHide} onExited={() => setProfanityWarning(false)} centered animation={false}>
-
+    <Modal show={show} onHide={onHide} onExited={() => setProfanityWarning(false)} centered>
       <Modal.Header closeButton>
         <Modal.Title>{t('chat.addChannel')}</Modal.Title>
       </Modal.Header>
