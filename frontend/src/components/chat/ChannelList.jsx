@@ -6,7 +6,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
 import {
-  setCurrentChannel,
+  
   createChannel,
   renameChannel,
   deleteChannel,
