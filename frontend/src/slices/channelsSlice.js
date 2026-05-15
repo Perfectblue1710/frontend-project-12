@@ -74,8 +74,15 @@ const channelsSlice = createSlice({
       state.error = null;
     },
     addChannel: (state, action) => {
+<<<<<<< HEAD
       console.log('Adding channel to state:', action.payload);
       state.channels.push(action.payload);
+=======
+      const channelExists = state.channels.some((ch) => ch.id === action.payload.id);
+      if (!channelExists) {
+        state.channels.push(action.payload);
+      }
+>>>>>>> codex-fix
     },
     removeChannel: (state, action) => {
       const channelId = action.payload;
@@ -95,20 +102,15 @@ const channelsSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(fetchChannels.pending, (state) => {
-        state.loading = true;
+        state.loading = state.channels.length === 0;
         state.error = null;
       })
       .addCase(fetchChannels.fulfilled, (state, action) => {
         state.loading = false;
-        let channels = action.payload;
-        if (!channels || channels.length === 0) {
-          channels = [{ id: 1, name: 'general' }];
-        } else if (!channels.some(ch => ch.name === 'general')) {
-          channels = [{ id: 1, name: 'general' }, ...channels];
-        }
+        const channels = action.payload ?? [];
         state.channels = channels;
-        if (!state.currentChannelId && channels.length > 0) {
-          state.currentChannelId = channels[0].id;
+        if (!state.currentChannelId || !channels.some((ch) => ch.id === state.currentChannelId)) {
+          state.currentChannelId = channels[0]?.id ?? null;
         }
       })
       .addCase(fetchChannels.rejected, (state, action) => {
@@ -121,8 +123,15 @@ const channelsSlice = createSlice({
       })
       .addCase(createChannel.fulfilled, (state, action) => {
         state.loading = false;
+<<<<<<< HEAD
         console.log('Create channel fulfilled:', action.payload);
         state.channels.push(action.payload);
+=======
+        const channelExists = state.channels.some((ch) => ch.id === action.payload.id);
+        if (!channelExists) {
+          state.channels.push(action.payload);
+        }
+>>>>>>> codex-fix
         state.currentChannelId = action.payload.id;
       })
       .addCase(createChannel.rejected, (state, action) => {

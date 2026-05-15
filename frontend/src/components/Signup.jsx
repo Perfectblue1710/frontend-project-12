@@ -30,10 +30,9 @@ const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
   try {
     const response = await authAPI.signup(values.username, values.password);
     const { token } = response.data;
-dispatch(setToken(token));
-await dispatch(fetchChannels()).unwrap();
-navigate('/');
-
+    dispatch(setToken(token));
+    await dispatch(fetchChannels()).unwrap();
+    navigate('/');
     } catch (error) {
       console.error('Signup error:', error);
       
