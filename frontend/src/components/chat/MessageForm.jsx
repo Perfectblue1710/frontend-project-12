@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, InputGroup } from 'react-bootstrap';
-import { addMessage } from '../../slices/messagesSlice';
+import { addMessage, setMessages } from '../../slices/messagesSlice';
 import { messagesAPI } from '../../services/api';
 
 const MessageForm = () => {
@@ -16,11 +16,16 @@ const MessageForm = () => {
 
     setSending(true);
     try {
-      const response = await messagesAPI.sendMessage({
+      // Отправляем сообщение
+      await messagesAPI.sendMessage({
         channelId: currentChannelId,
         body: message.trim(),
       });
-      dispatch(addMessage(response.data));
+      
+  
+      const response = await messagesAPI.getMessages();
+      dispatch(setMessages(response.data));
+      
       setMessage('');
     } catch (error) {
       console.error('Failed to send message:', error);
