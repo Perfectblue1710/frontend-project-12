@@ -32,11 +32,11 @@ const messagesSlice = createSlice({
   },
 });
 
-export const { 
-  setMessages, 
-  addMessage, 
-  setLoading, 
-  setError, 
+export const {
+  setMessages,
+  addMessage,
+  setLoading,
+  setError,
   setConnectionStatus,
   clearMessages,
 } = messagesSlice.actions;

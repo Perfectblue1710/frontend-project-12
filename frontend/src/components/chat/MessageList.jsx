@@ -27,19 +27,15 @@ const MessageList = () => {
             Нет сообщений. Будьте первым!
           </div>
         )}
-{currentMessages.map((message) => (
-  <ListGroup.Item
-    key={message.id}
-    className="border-0 px-0"
-  >
-    <p className="mb-0 mt-1 text-break">
-      <strong className="me-2">
-        {message.username}
-      </strong>
-      {message.body}
-    </p>
-  </ListGroup.Item>
-))}
+        {currentMessages.map((message) => (
+          <ListGroup.Item key={message.id || Math.random()} className="border-0 px-0">
+            <strong className="me-2">{message.username || 'Anonymous'}</strong>
+            <span className="text-muted small">
+              {message.createdAt ? new Date(message.createdAt).toLocaleString() : new Date().toLocaleString()}
+            </span>
+            <p className="mb-0 mt-1 text-break">{message.body}</p>
+          </ListGroup.Item>
+        ))}
         <div ref={messagesEndRef} />
       </ListGroup>
     </div>
