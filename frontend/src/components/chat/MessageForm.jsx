@@ -9,25 +9,27 @@ const MessageForm = () => {
   const [sending, setSending] = useState(false);
   const dispatch = useDispatch();
   const { currentChannelId } = useSelector((state) => state.channels);
-  const { currentChannelId: activeChannel } = useSelector((state) => state.channels);
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
-  if (!message.trim() || sending) return;
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!message.trim() || sending) return;
 
-  setSending(true);
-  try {
-    await messagesAPI.sendMessage({
-      channelId: currentChannelId,
-      body: message.trim(),
-    });
+    setSending(true);
+    try {
 
-    setMessage('');
-  } catch (error) {
-    console.error('Failed to send message:', error);
-  } finally {
-    setSending(false);
-  }
+      const response = await messagesAPI.sendMessage({
+        channelId: currentChannelId,
+        body: message.trim(),
+      });
+      
+      dispatch(addMessage(response.data));
+      
+      setMessage('');
+    } catch (error) {
+      console.error('Failed to send message:', error);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
