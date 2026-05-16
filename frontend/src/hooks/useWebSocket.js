@@ -31,8 +31,9 @@ export const useWebSocket = () => {
       console.log('❌ WebSocket disconnected:', reason);
       dispatch(setConnectionStatus(false));
     });
-socket.on('newMessage', ({ data }) => {
-  dispatch(addMessage(data.attributes));
+socket.on('newMessage', (message) => {
+  console.log(message);
+  dispatch(addMessage(message));
 });
     socket.on('newChannel', (channel) => {
 
