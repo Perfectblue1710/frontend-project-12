@@ -31,13 +31,11 @@ export const useWebSocket = () => {
       console.log('❌ WebSocket disconnected:', reason);
       dispatch(setConnectionStatus(false));
     });
+socket.on('newMessage', (message) => {
+  console.log('📨 New message from other user via WebSocket:', message);
 
-    socket.on('newMessage', (message) => {
-      
-      console.log('📨 New message received via WebSocket:', message);
-      dispatch(addMessage(message));
-    });
-
+  dispatch(addMessage(message));
+});
     socket.on('newChannel', (channel) => {
 
       dispatch(addChannel(channel));
