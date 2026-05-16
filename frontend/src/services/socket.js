@@ -7,7 +7,8 @@ export const initSocket = (token) => {
     socket.disconnect();
   }
   
-  const SOCKET_URL = import.meta.env.PROD ? window.location.origin : 'http://localhost:5001';
+  // Используем правильный URL для WebSocket
+  const SOCKET_URL = 'http://localhost:5001';
   
   socket = io(SOCKET_URL, {
     path: '/api/v1/ws',
@@ -16,10 +17,17 @@ export const initSocket = (token) => {
       token,
     },
     reconnection: true,
-    reconnectionAttempts: 3,
+    reconnectionAttempts: 5,
     reconnectionDelay: 1000,
-    timeout: 10000,
-    autoConnect: true,
+    timeout: 20000,
+  });
+  
+  socket.on('connect', () => {
+    console.log('✅ WebSocket connected successfully');
+  });
+  
+  socket.on('connect_error', (error) => {
+    console.error('WebSocket connect error:', error);
   });
   
   return socket;
