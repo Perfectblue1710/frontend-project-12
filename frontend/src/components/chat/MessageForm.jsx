@@ -1,29 +1,27 @@
 import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { Form, Button, InputGroup } from 'react-bootstrap';
-import { addMessage } from '../../slices/messagesSlice';
 import { messagesAPI } from '../../services/api';
 
 const MessageForm = () => {
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
-  const dispatch = useDispatch();
+
   const { currentChannelId } = useSelector((state) => state.channels);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!message.trim() || sending) return;
 
     setSending(true);
-    try {
 
-      const response = await messagesAPI.sendMessage({
+    try {
+      await messagesAPI.sendMessage({
         channelId: currentChannelId,
         body: message.trim(),
       });
-      
-      dispatch(addMessage(response.data));
-      
+
       setMessage('');
     } catch (error) {
       console.error('Failed to send message:', error);
@@ -43,6 +41,7 @@ const MessageForm = () => {
             placeholder="Введите сообщение..."
             disabled={sending}
           />
+
           <Button type="submit" disabled={sending}>
             {sending ? 'Отправка...' : 'Отправить'}
           </Button>
