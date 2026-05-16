@@ -25,33 +25,35 @@ const ChatPage = () => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
- const { channels, loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
+  const { channels, loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
+  const { messages } = useSelector((state) => state.messages);
+
 
   useWebSocket();
+
 
   useEffect(() => {
     if (!isAuthenticated) return;
 
-    const loadData = async () => {
+    const loadChannels = async () => {
       try {
         await dispatch(fetchChannels()).unwrap();
-        dispatch(setMessagesLoading(true));
-        const messagesRes = await messagesAPI.getMessages();
-        dispatch(setMessages(messagesRes.data));
+        
       } catch (error) {
-        console.error('Failed to load data:', error);
+        console.error('Failed to load channels:', error);
         toast.error(t('toasts.loadError'));
         if (error.response?.status === 401) {
           toast.error(t('toasts.unauthorized'));
           dispatch(logout());
         }
-      } finally {
-        dispatch(setMessagesLoading(false));
       }
     };
 
-    loadData();
+    loadChannels();
   }, [isAuthenticated, dispatch, t]);
+
+  // Не загружаем сообщения через API - только через WebSocket!
+  // Сообщения будут приходить через socket.on('newMessage')
 
   if (channelsLoading && channels.length === 0) {
     return (
@@ -60,8 +62,8 @@ const ChatPage = () => {
       </div>
     );
   }
-if (channelsError && channels.length === 0) {
 
+  if (channelsError && channels.length === 0) {
     return (
       <div className="d-flex justify-content-center align-items-center" style={{ height: '100vh' }}>
         <div className="text-center">
@@ -94,16 +96,16 @@ function App() {
     <BrowserRouter>
       <div className="d-flex flex-column h-100">
         <Header />
-<Routes>
-  <Route path="/" element={
-    <ProtectedRoute>
-      <ChatPage />
-    </ProtectedRoute>
-  } />
-  <Route path="/login" element={<Login />} />
-  <Route path="/signup" element={<Signup />} />
-  <Route path="*" element={<NotFound />} />
-</Routes>
+        <Routes>
+          <Route path="/" element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          } />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </div>
       <ToastContainer
         position="top-right"
@@ -121,4 +123,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
