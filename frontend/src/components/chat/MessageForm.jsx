@@ -1,38 +1,43 @@
 import { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { messagesAPI } from '../../services/api';
-import { addMessage } from '../../slices/messagesSlice';
+import { addMessage } from '../../slices/messagesSlice'; // ← ДОБАВИТЬ
 
 const MessageForm = () => {
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
-
-  const dispatch = useDispatch();
+  
+  const dispatch = useDispatch(); 
   const { currentChannelId } = useSelector((state) => state.channels);
-  const { token } = useSelector((state) => state.auth);
+  
+
+  const username = localStorage.getItem('username');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!message.trim() || sending || !currentChannelId) return;
+    if (!message.trim() || sending) return;
 
     setSending(true);
 
     try {
-      const response = await messagesAPI.sendMessage({
-        channelId: currentChannelId,
+
+      await messagesAPI.sendMessage({
         body: message.trim(),
+        channelId: currentChannelId,
+        username: username,
       });
 
-      // ⭐ ВАЖНО: добавляем username вручную, если сервер его не вернул
-      const newMessage = {
-        ...response.data,
-        username: response.data.username || 'admin', // или можно получить из токена
-        createdAt: response.data.createdAt || new Date().toISOString(),
-      };
 
+      const newMessage = {
+        body: message.trim(),
+        channelId: currentChannelId,
+        username: username,
+        id: Date.now(),
+        createdAt: new Date(),
+      };
       dispatch(addMessage(newMessage));
+
       setMessage('');
     } catch (error) {
       console.error('Failed to send message:', error);

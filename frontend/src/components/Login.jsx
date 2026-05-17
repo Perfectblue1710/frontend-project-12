@@ -3,10 +3,23 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
 import { toast } from 'react-toastify';
-import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap';
-import { setToken, setError, setLoading, clearError } from '../store/authSlice';
-import { authAPI } from '../services/api';
+import {
+  Alert,
+  Button,
+  Container,
+  Row,
+  Col,
+  Form as BootstrapForm,
+} from 'react-bootstrap';
 
+import {
+  setToken,
+  setError,
+  setLoading,
+  clearError,
+} from '../store/authSlice';
+
+import { authAPI } from '../services/api';
 
 const Login = () => {
   const navigate = useNavigate();
