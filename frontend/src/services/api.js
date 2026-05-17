@@ -40,9 +40,11 @@ export const channelsAPI = {
 
 export const messagesAPI = {
   getMessages: () => api.get('/v1/messages'),
-
-  sendMessage: (message) =>
-    api.post('/v1/messages', message),
+  sendMessage: (message) => api.post('/v1/messages', {
+    body: message.body,
+    channelId: message.channelId,
+    username: message.username, 
+  }),
 };
 
 export default api;
