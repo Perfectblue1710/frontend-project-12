@@ -29,13 +29,12 @@ const MessageForm = () => {
       });
 
 
-      const newMessage = {
-        body: message.trim(),
-        channelId: currentChannelId,
-        username: username,
-        id: Date.now(),
-        createdAt: new Date(),
-      };
+    const newMessage = {
+  id: Date.now(),
+  body: message.trim(),
+  channelId: currentChannelId,
+  username,
+};
       dispatch(addMessage(newMessage));
 
       setMessage('');
