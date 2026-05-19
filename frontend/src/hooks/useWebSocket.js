@@ -46,12 +46,17 @@ export const useWebSocket = () => {
 
       dispatch(setConnectionStatus(false));
     });
+    
+socket.on('newMessage', (message) => {
+  console.log('📨 message:', message);
 
-    socket.on('newMessage', (message) => {
-      console.log('📨 message:', message);
+  const normalizedMessage = {
+    ...message,
+    username: message.username || currentUser?.username || 'Anonymous',
+  };
 
-      dispatch(addMessage(message));
-    });
+  dispatch(addMessage(normalizedMessage));
+});
 
     socket.on('newChannel', (channel) => {
       dispatch(addChannel(channel));
