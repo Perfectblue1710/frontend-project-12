@@ -2,7 +2,7 @@ install:
 	npm ci
 	cd frontend && npm ci
 
-build:
+build: install
 	cd frontend && npm run build
 
 start:
