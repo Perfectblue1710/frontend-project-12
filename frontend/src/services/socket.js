@@ -1,12 +1,12 @@
-import { io } from 'socket.io-client';
+import { io } from 'socket.io-client'
 
-let socket = null;
+let socket = null
 
 export const initSocket = () => {
-  const token = localStorage.getItem('token');
+  const token = localStorage.getItem('token')
 
   if (socket) {
-    socket.disconnect();
+    socket.disconnect()
   }
 
   socket = io({
@@ -15,14 +15,14 @@ export const initSocket = () => {
     auth: {
       token,
     },
-  });
+  })
 
-  return socket;
-};
+  return socket
+}
 
 export const closeSocket = () => {
   if (socket) {
-    socket.disconnect();
-    socket = null;
+    socket.disconnect()
+    socket = null
   }
-};
+}

@@ -1,8 +1,8 @@
-import { useNavigate, Link } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
-import * as Yup from 'yup';
-import { toast } from 'react-toastify';
+import { useNavigate, Link } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { Formik, Form, Field } from 'formik'
+import * as Yup from 'yup'
+import { toast } from 'react-toastify'
 import {
   Alert,
   Button,
@@ -10,48 +10,43 @@ import {
   Row,
   Col,
   Form as BootstrapForm,
-} from 'react-bootstrap';
+} from 'react-bootstrap'
 
-import {
-  setToken,
-  setError,
-  setLoading,
-  clearError,
-} from '../store/authSlice';
+import { setToken, setError, setLoading, clearError } from '../store/authSlice'
 
-import { authAPI } from '../services/api';
+import { authAPI } from '../services/api'
 
 const Login = () => {
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { error, loading } = useSelector((state) => state.auth);
+  const navigate = useNavigate()
+  const dispatch = useDispatch()
+  const { error, loading } = useSelector((state) => state.auth)
 
   const validationSchema = Yup.object({
     username: Yup.string().required('Обязательное поле'),
     password: Yup.string().required('Обязательное поле'),
-  });
+  })
 
-const handleSubmit = async (values, { setSubmitting }) => {
-  try {
-    const response = await authAPI.login(values.username, values.password);
-const { token } = response.data;
-localStorage.setItem('username', values.username);
-dispatch(setToken(token));
-    navigate('/'); 
+  const handleSubmit = async (values, { setSubmitting }) => {
+    try {
+      const response = await authAPI.login(values.username, values.password);
+      const { token } = response.data
+      localStorage.setItem('username', values.username)
+      dispatch(setToken(token))
+      navigate('/')
     } catch (err) {
-      console.error('Login error:', err);
+      console.error('Login error:', err)
       if (err.response && err.response.status === 401) {
-        dispatch(setError('Неверные имя пользователя или пароль'));
+        dispatch(setError('Неверные имя пользователя или пароль'))
       } else {
-        const errorMsg = 'Ошибка сервера. Попробуйте позже.';
-        dispatch(setError(errorMsg));
-        toast.error(errorMsg);
+        const errorMsg = 'Ошибка сервера. Попробуйте позже.'
+        dispatch(setError(errorMsg))
+        toast.error(errorMsg)
       }
     } finally {
-      dispatch(setLoading(false));
-      setSubmitting(false);
+      dispatch(setLoading(false))
+      setSubmitting(false)
     }
-  };
+  }
 
   return (
     <Container className="mt-5">
@@ -59,21 +54,34 @@ dispatch(setToken(token));
         <Col md={6}>
           <div className="bg-light p-4 rounded shadow">
             <h2 className="text-center mb-4">Вход в чат</h2>
-            
+
             {error && (
-              <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
+              <Alert
+                variant="danger"
+                onClose={() => dispatch(clearError())}
+                dismissible
+              >
                 {error}
               </Alert>
             )}
-            
+
             <Formik
               initialValues={{ username: '', password: '' }}
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({ isSubmitting, errors, touched, handleChange, handleBlur }) => (
+              {({
+                isSubmitting,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+              }) => (
                 <Form>
-                  <BootstrapForm.Group className="mb-3" controlId="login-username">
+                  <BootstrapForm.Group
+                    className="mb-3"
+                    controlId="login-username"
+                  >
                     <BootstrapForm.Label>Ваш ник</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -86,13 +94,19 @@ dispatch(setToken(token));
                       onBlur={handleBlur}
                     />
                     {errors.username && touched.username && (
-                      <div className="text-danger" style={{ fontSize: '0.875em', marginTop: '0.25rem' }}>
+                      <div
+                        className="text-danger"
+                        style={{ fontSize: '0.875em', marginTop: '0.25rem' }}
+                      >
                         {errors.username}
                       </div>
                     )}
                   </BootstrapForm.Group>
 
-                  <BootstrapForm.Group className="mb-3" controlId="login-password">
+                  <BootstrapForm.Group
+                    className="mb-3"
+                    controlId="login-password"
+                  >
                     <BootstrapForm.Label>Пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -105,7 +119,10 @@ dispatch(setToken(token));
                       onBlur={handleBlur}
                     />
                     {errors.password && touched.password && (
-                      <div className="text-danger" style={{ fontSize: '0.875em', marginTop: '0.25rem' }}>
+                      <div
+                        className="text-danger"
+                        style={{ fontSize: '0.875em', marginTop: '0.25rem' }}
+                      >
                         {errors.password}
                       </div>
                     )}
@@ -119,12 +136,12 @@ dispatch(setToken(token));
                   >
                     {loading ? 'Вход...' : 'Войти'}
                   </Button>
-                  
+
                   {/* ССЫЛКА НА РЕГИСТРАЦИЮ */}
                   <div className="text-center">
                     <Link to="/signup">Регистрация</Link>
                   </div>
-                  
+
                   <div className="text-center mt-2 text-muted">
                     <small>Тестовые данные: admin / admin</small>
                   </div>
@@ -135,7 +152,8 @@ dispatch(setToken(token));
         </Col>
       </Row>
     </Container>
-  );
-};
+  )
+}
 
-export default Login;
+export default Login
+

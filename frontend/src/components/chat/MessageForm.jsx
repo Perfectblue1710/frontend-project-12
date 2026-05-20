@@ -1,40 +1,35 @@
-import { useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useState } from 'react'
+import { useSelector } from 'react-redux'
 import { Form, Button, InputGroup } from 'react-bootstrap';
-import { messagesAPI } from '../../services/api';
-// import { addMessage } from '../../slices/messagesSlice'; 
+import { messagesAPI } from '../../services/api'
 
 const MessageForm = () => {
-  const [message, setMessage] = useState('');
-  const [sending, setSending] = useState(false);
-  
-  // const dispatch = useDispatch(); 
-  const { currentChannelId } = useSelector((state) => state.channels);
-  
+  const [message, setMessage] = useState('')
+  const [sending, setSending] = useState(false)
 
-  // const username = localStorage.getItem('username');
+  const { currentChannelId } = useSelector((state) => state.channels)
 
-const handleSubmit = async (e) => {
-  e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  if (!message.trim() || sending) return;
+    if (!message.trim() || sending) return;
 
-  setSending(true);
+    setSending(true);
 
-  try {
-  await messagesAPI.sendMessage({
-  body: message.trim(),
-  channelId: currentChannelId,
-  username: localStorage.getItem('username'),
-});
+    try {
+      await messagesAPI.sendMessage({
+        channelId: currentChannelId,
+        body: message.trim(),
+        username: localStorage.getItem('username'),
+      })
 
-    setMessage('');
-  } catch (error) {
-    console.error('Failed to send message:', error);
-  } finally {
-    setSending(false);
+      setMessage('')
+    } catch (error) {
+      console.error('Failed to send message:', error)
+    } finally {
+      setSending(false)
+    }
   }
-};
 
   return (
     <div className="p-3 border-top">
@@ -53,7 +48,7 @@ const handleSubmit = async (e) => {
         </InputGroup>
       </Form>
     </div>
-  );
-};
+  )
+}
 
 export default MessageForm;

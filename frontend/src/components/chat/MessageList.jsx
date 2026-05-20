@@ -1,20 +1,22 @@
-import { useSelector } from 'react-redux';
-import { useEffect, useRef } from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { useSelector } from 'react-redux'
+import { useEffect, useRef } from 'react'
+import { ListGroup } from 'react-bootstrap'
 
 const MessageList = () => {
-  const { messages } = useSelector((state) => state.messages);
-  const { currentChannelId, channels } = useSelector((state) => state.channels);
-  const messagesEndRef = useRef(null);
+  const { messages } = useSelector((state) => state.messages)
+  const { currentChannelId, channels } = useSelector((state) => state.channels)
+  const messagesEndRef = useRef(null)
 
-  const currentChannel = channels.find(ch => ch.id === currentChannelId);
-  const currentMessages = messages.filter(msg => msg.channelId === currentChannelId);
+  const currentChannel = channels.find((ch) => ch.id === currentChannelId)
+  const currentMessages = messages.filter(
+    (msg) => msg.channelId === currentChannelId,
+  )
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [currentMessages]);
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [currentMessages])
 
-  if (!currentChannel) return null;
+  if (!currentChannel) return null
 
   return (
     <div className="h-100 d-flex flex-column">
@@ -31,7 +33,9 @@ const MessageList = () => {
           <ListGroup.Item key={message.id} className="border-0 px-0">
             <strong className="me-2">{message.username || 'Anonymous'}</strong>
             <span className="text-muted small">
-              {message.createdAt ? new Date(message.createdAt).toLocaleString() : new Date().toLocaleString()}
+              {message.createdAt
+                ? new Date(message.createdAt).toLocaleString()
+                : new Date().toLocaleString()}
             </span>
             <p className="mb-0 mt-1 text-break">{message.body}</p>
           </ListGroup.Item>
@@ -39,7 +43,8 @@ const MessageList = () => {
         <div ref={messagesEndRef} />
       </ListGroup>
     </div>
-  );
-};
+  )
+}
 
-export default MessageList;
+export default MessageList
+

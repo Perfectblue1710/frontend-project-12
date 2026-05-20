@@ -23,15 +23,17 @@ const RenameChannelModal = ({ show, onHide, channelId, currentName }) => {
       .min(3, t('errors.usernameLength'))
       .max(20, t('errors.usernameLength'))
       .notOneOf(
-        channels.filter(ch => ch.id !== channelId).map(ch => ch.name),
-        t('errors.channelExists')
+        channels.filter((ch) => ch.id !== channelId).map((ch) => ch.name),
+        t('errors.channelExists'),
       )
       .required(t('errors.required')),
   });
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      await dispatch(renameChannel({ id: channelId, name: values.name })).unwrap();
+      await dispatch(
+        renameChannel({ id: channelId, name: values.name }),
+      ).unwrap();
       onHide();
     } catch (error) {
       console.error('Failed to rename channel:', error);
@@ -64,15 +66,29 @@ const RenameChannelModal = ({ show, onHide, channelId, currentName }) => {
                   disabled={isSubmitting || loading}
                   ref={inputRef}
                 />
-                <ErrorMessage name="name" component={Form.Text} className="text-danger" />
+                <ErrorMessage
+                  name="name"
+                  component={Form.Text}
+                  className="text-danger"
+                />
               </Form.Group>
             </Modal.Body>
             <Modal.Footer>
-              <Button variant="secondary" onClick={onHide} disabled={isSubmitting || loading}>
+              <Button
+                variant="secondary"
+                onClick={onHide}
+                disabled={isSubmitting || loading}
+              >
                 {t('chat.cancel')}
               </Button>
-              <Button variant="primary" type="submit" disabled={isSubmitting || loading}>
-                {isSubmitting || loading ? t('chat.renaming') : t('chat.renameButton')}
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={isSubmitting || loading}
+              >
+                {isSubmitting || loading
+                  ? t('chat.renaming')
+                  : t('chat.renameButton')}
               </Button>
             </Modal.Footer>
           </Form>
