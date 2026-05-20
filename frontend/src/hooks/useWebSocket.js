@@ -48,13 +48,18 @@ export const useWebSocket = () => {
     });
     
 socket.on('newMessage', (message) => {
-  console.log('📨 message:', message);
+  console.log('📨 message from server:', message);
 
+  let username = message.username;
+  if (!username || username === 'null' || username === 'undefined') {
+    username = localStorage.getItem('username') || 'Anonymous';
+  }
+  
   const normalizedMessage = {
     ...message,
-    username: message.username || currentUser?.username || 'Anonymous',
+    username: username,
   };
-
+  
   dispatch(addMessage(normalizedMessage));
 });
 
