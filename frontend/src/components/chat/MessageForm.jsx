@@ -2,17 +2,17 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { messagesAPI } from '../../services/api';
-import { addMessage } from '../../slices/messagesSlice'; // ← ДОБАВИТЬ
+// import { addMessage } from '../../slices/messagesSlice'; // ← ДОБАВИТЬ
 
 const MessageForm = () => {
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   
-  const dispatch = useDispatch(); 
+  // const dispatch = useDispatch(); 
   const { currentChannelId } = useSelector((state) => state.channels);
   
 
-  const username = localStorage.getItem('username');
+  // const username = localStorage.getItem('username');
 
 const handleSubmit = async (e) => {
   e.preventDefault();

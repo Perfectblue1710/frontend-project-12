@@ -12,7 +12,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Header from './components/Header';
 import { logout } from './store/authSlice';
 import { fetchChannels } from './slices/channelsSlice';
-import { setMessages, setLoading as setMessagesLoading } from './slices/messagesSlice';
+import { setMessages } from './slices/messagesSlice';
 import { messagesAPI } from './services/api';
 import useWebSocket from './hooks/useWebSocket';
 import ChannelList from './components/chat/ChannelList';
@@ -26,7 +26,7 @@ const ChatPage = () => {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
   const { channels, loading: channelsLoading, error: channelsError } = useSelector((state) => state.channels);
-  const { messages } = useSelector((state) => state.messages);
+  
 
 
   useWebSocket();

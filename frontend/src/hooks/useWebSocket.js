@@ -88,7 +88,7 @@ export const useWebSocket = () => {
     };
   }, [dispatch, isAuthenticated]);
 
-  return socketRef.current;
+  return null;
 };
 
 export default useWebSocket;

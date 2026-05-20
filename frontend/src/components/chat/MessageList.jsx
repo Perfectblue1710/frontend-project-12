@@ -28,7 +28,7 @@ const MessageList = () => {
           </div>
         )}
         {currentMessages.map((message) => (
-          <ListGroup.Item key={message.id || Math.random()} className="border-0 px-0">
+          <ListGroup.Item key={message.id} className="border-0 px-0">
             <strong className="me-2">{message.username || 'Anonymous'}</strong>
             <span className="text-muted small">
               {message.createdAt ? new Date(message.createdAt).toLocaleString() : new Date().toLocaleString()}
