@@ -1,29 +1,51 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from '@eslint/js';
+import globals from 'globals';
+import react from 'eslint-plugin-react';
+import stylistic from '@stylistic/eslint-plugin';
 
-export default defineConfig([
-  globalIgnores(['dist']),
+export default [
+  js.configs.recommended,
   {
     files: ['**/*.{js,jsx}'],
-    extends: [
-      js.configs.recommended,
-      reactHooks.configs.flat.recommended,
-      reactRefresh.configs.vite,
-    ],
     languageOptions: {
-      ecmaVersion: 2020,
+      ecmaVersion: 'latest',
+      sourceType: 'module',
       globals: globals.browser,
       parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
-        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
     },
+
+    plugins: {
+      react,
+      '@stylistic': stylistic,
+    },
+
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      'no-unused-vars': [
+        'error',
+        {
+          argsIgnorePattern: '^_',
+          varsIgnorePattern: '^_',
+        },
+      ],
+
+      
+      '@stylistic/brace-style': 'off',
+      '@stylistic/arrow-parens': 'off',
+      '@stylistic/comma-dangle': 'off',
+      '@stylistic/jsx-one-expression-per-line': 'off',
+      '@stylistic/jsx-wrap-multilines': 'off',
+      '@stylistic/operator-linebreak': 'off',
+      '@stylistic/no-multiple-empty-lines': 'off',
     },
   },
-])
+]
