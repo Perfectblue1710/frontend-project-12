@@ -6,6 +6,7 @@
   "scripts": {
     "start": "serve -s frontend/dist -l 8080",
     "dev": "vite",
+    "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
