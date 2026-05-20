@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { initSocket, closeSocket } from '../services/socket';
+import { initSocket} from '../services/socket';
 
 import {
   addMessage,
