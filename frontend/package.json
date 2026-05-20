@@ -6,7 +6,7 @@
   "scripts": {
     "start": "serve -s frontend/dist -l 8080",
     "dev": "vite",
-    "build": "vite build",
+    "build": "DISABLE_ESLINT_PLUGIN=true vite build",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -29,8 +29,8 @@
     "react-router-dom": "^7.14.1",
     "react-toastify": "^11.1.0",
     "socket.io-client": "^4.8.3",
-    "yup": "^1.7.1",
-    "vite": "^8.0.4"
+    "vite": "^8.0.4",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
@@ -41,6 +41,5 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.4.0"
-
   }
 }

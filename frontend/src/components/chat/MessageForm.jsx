@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Form, Button, InputGroup } from 'react-bootstrap';
 import { messagesAPI } from '../../services/api';
-// import { addMessage } from '../../slices/messagesSlice'; // ← ДОБАВИТЬ
+// import { addMessage } from '../../slices/messagesSlice'; 
 
 const MessageForm = () => {
   const [message, setMessage] = useState('');
