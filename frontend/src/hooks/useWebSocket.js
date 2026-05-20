@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { initSocket} from '../services/socket';
+import { initSocket, closeSocket } from '../services/socket';
 
 import {
   addMessage,
@@ -46,20 +46,12 @@ export const useWebSocket = () => {
 
       dispatch(setConnectionStatus(false));
     });
-    
-socket.on('newMessage', (message) => {
-  console.log('📨 message from server:', message);
 
-  dispatch(addMessage(message));
-});
-  
-  const normalizedMessage = {
-    ...message,
-    username: username,
-  };
-  
-  dispatch(addMessage(normalizedMessage));
-});
+    socket.on('newMessage', (message) => {
+      console.log('📨 message from server:', message);
+
+      dispatch(addMessage(message));
+    });
 
     socket.on('newChannel', (channel) => {
       dispatch(addChannel(channel));
@@ -94,8 +86,9 @@ socket.on('newMessage', (message) => {
         socketRef.current = null;
       }
     };
-  }, [dispatch, isAuthenticated];
+  }, [dispatch, isAuthenticated]);
 
   return socketRef.current;
+};
 
 export default useWebSocket;
