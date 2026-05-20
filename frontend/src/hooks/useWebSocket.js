@@ -50,10 +50,8 @@ export const useWebSocket = () => {
 socket.on('newMessage', (message) => {
   console.log('📨 message from server:', message);
 
-  let username = message.username;
-  if (!username || username === 'null' || username === 'undefined') {
-    username = localStorage.getItem('username') || 'Anonymous';
-  }
+  dispatch(addMessage(message));
+});
   
   const normalizedMessage = {
     ...message,
@@ -96,9 +94,8 @@ socket.on('newMessage', (message) => {
         socketRef.current = null;
       }
     };
-  }, [dispatch, isAuthenticated]);
+  }, [dispatch, isAuthenticated];
 
   return socketRef.current;
-};
 
 export default useWebSocket;

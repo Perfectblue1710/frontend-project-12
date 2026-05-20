@@ -14,36 +14,27 @@ const MessageForm = () => {
 
   const username = localStorage.getItem('username');
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!message.trim() || sending) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    setSending(true);
+  if (!message.trim() || sending) return;
 
-    try {
+  setSending(true);
 
-      await messagesAPI.sendMessage({
-        body: message.trim(),
-        channelId: currentChannelId,
-        username: username,
-      });
+  try {
+    await messagesAPI.sendMessage({
+      channelId: currentChannelId,
+      body: message.trim(),
+      username: localStorage.getItem('username'),
+    });
 
-
-    const newMessage = {
-  id: Date.now(),
-  body: message.trim(),
-  channelId: currentChannelId,
-  username,
+    setMessage('');
+  } catch (error) {
+    console.error('Failed to send message:', error);
+  } finally {
+    setSending(false);
+  }
 };
-      dispatch(addMessage(newMessage));
-
-      setMessage('');
-    } catch (error) {
-      console.error('Failed to send message:', error);
-    } finally {
-      setSending(false);
-    }
-  };
 
   return (
     <div className="p-3 border-top">

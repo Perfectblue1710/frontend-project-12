@@ -30,6 +30,7 @@ const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
   try {
     const response = await authAPI.signup(values.username, values.password);
     const { token } = response.data;
+    localStorage.setItem('username', values.username);
 dispatch(setToken(token));
 await dispatch(fetchChannels()).unwrap();
 navigate('/');
