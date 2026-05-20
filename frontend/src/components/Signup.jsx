@@ -3,14 +3,7 @@ import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
-import {
-  Alert,
-  Button,
-  Container,
-  Row,
-  Col,
-  Form as BootstrapForm,
-} from 'react-bootstrap'
+import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap'
 import { setToken } from '../store/authSlice'
 import { fetchChannels } from '../slices/channelsSlice'
 import { authAPI } from '../services/api'
@@ -25,9 +18,7 @@ const Signup = () => {
       .min(3, 'От 3 до 20 символов')
       .max(20, 'От 3 до 20 символов')
       .required('Обязательное поле'),
-    password: Yup.string()
-      .min(6, 'Не менее 6 символов')
-      .required('Обязательное поле'),
+    password: Yup.string().min(6, 'Не менее 6 символов').required('Обязательное поле'),
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), null], 'Пароли должны совпадать')
       .required('Обязательное поле'),
@@ -44,7 +35,7 @@ const Signup = () => {
       console.error('Signup error:', error)
 
       if (error.response && error.response.status === 409) {
-        const errorMsg = 'Такой пользователь уже существует';
+        const errorMsg = 'Такой пользователь уже существует'
         setServerError(errorMsg)
         setFieldError('username', errorMsg)
       } else {
@@ -53,7 +44,7 @@ const Signup = () => {
     } finally {
       setSubmitting(false)
     }
-  };
+  }
 
   return (
     <Container className="mt-5">
@@ -63,11 +54,7 @@ const Signup = () => {
             <h2 className="text-center mb-4">Регистрация</h2>
 
             {serverError && (
-              <Alert
-                variant="danger"
-                onClose={() => setServerError(null)}
-                dismissible
-              >
+              <Alert variant="danger" onClose={() => setServerError(null)} dismissible>
                 {serverError}
               </Alert>
             )}
@@ -83,19 +70,10 @@ const Signup = () => {
               validateOnChange={true}
               validateOnBlur={true}
             >
-              {({
-                isSubmitting,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-              }) => (
+              {({ isSubmitting, errors, touched, handleChange, handleBlur }) => (
                 <Form>
                   {}
-                  <BootstrapForm.Group
-                    className="mb-3"
-                    controlId="signup-username"
-                  >
+                  <BootstrapForm.Group className="mb-3" controlId="signup-username">
                     <BootstrapForm.Label>Имя пользователя</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -118,10 +96,7 @@ const Signup = () => {
                   </BootstrapForm.Group>
 
                   {}
-                  <BootstrapForm.Group
-                    className="mb-3"
-                    controlId="signup-password"
-                  >
+                  <BootstrapForm.Group className="mb-3" controlId="signup-password">
                     <BootstrapForm.Label>Пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -144,21 +119,14 @@ const Signup = () => {
                   </BootstrapForm.Group>
 
                   {}
-                  <BootstrapForm.Group
-                    className="mb-3"
-                    controlId="signup-confirm-password"
-                  >
-                    <BootstrapForm.Label>
-                      Подтвердите пароль
-                    </BootstrapForm.Label>
+                  <BootstrapForm.Group className="mb-3" controlId="signup-confirm-password">
+                    <BootstrapForm.Label>Подтвердите пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="password"
                       name="confirmPassword"
                       placeholder="Подтвердите пароль"
-                      isInvalid={
-                        errors.confirmPassword && touched.confirmPassword
-                      }
+                      isInvalid={errors.confirmPassword && touched.confirmPassword}
                       disabled={isSubmitting}
                       onChange={handleChange}
                       onBlur={handleBlur}
@@ -197,4 +165,3 @@ const Signup = () => {
 }
 
 export default Signup
-

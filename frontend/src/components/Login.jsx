@@ -3,14 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
-import {
-  Alert,
-  Button,
-  Container,
-  Row,
-  Col,
-  Form as BootstrapForm,
-} from 'react-bootstrap'
+import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap'
 
 import { setToken, setError, setLoading, clearError } from '../store/authSlice'
 
@@ -19,7 +12,7 @@ import { authAPI } from '../services/api'
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-  const { error, loading } = useSelector((state) => state.auth)
+  const { error, loading } = useSelector(state => state.auth)
 
   const validationSchema = Yup.object({
     username: Yup.string().required('Обязательное поле'),
@@ -28,7 +21,7 @@ const Login = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      const response = await authAPI.login(values.username, values.password);
+      const response = await authAPI.login(values.username, values.password)
       const { token } = response.data
       localStorage.setItem('username', values.username)
       dispatch(setToken(token))
@@ -56,11 +49,7 @@ const Login = () => {
             <h2 className="text-center mb-4">Вход в чат</h2>
 
             {error && (
-              <Alert
-                variant="danger"
-                onClose={() => dispatch(clearError())}
-                dismissible
-              >
+              <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
                 {error}
               </Alert>
             )}
@@ -70,18 +59,9 @@ const Login = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({
-                isSubmitting,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-              }) => (
+              {({ isSubmitting, errors, touched, handleChange, handleBlur }) => (
                 <Form>
-                  <BootstrapForm.Group
-                    className="mb-3"
-                    controlId="login-username"
-                  >
+                  <BootstrapForm.Group className="mb-3" controlId="login-username">
                     <BootstrapForm.Label>Ваш ник</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -103,10 +83,7 @@ const Login = () => {
                     )}
                   </BootstrapForm.Group>
 
-                  <BootstrapForm.Group
-                    className="mb-3"
-                    controlId="login-password"
-                  >
+                  <BootstrapForm.Group className="mb-3" controlId="login-password">
                     <BootstrapForm.Label>Пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
@@ -156,4 +133,3 @@ const Login = () => {
 }
 
 export default Login
-

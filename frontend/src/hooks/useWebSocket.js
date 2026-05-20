@@ -5,16 +5,12 @@ import { initSocket, closeSocket } from '../services/socket'
 
 import { addMessage, setConnectionStatus } from '../slices/messagesSlice'
 
-import {
-  addChannel,
-  removeChannel,
-  renameChannelWS,
-} from '../slices/channelsSlice'
+import { addChannel, removeChannel, renameChannelWS } from '../slices/channelsSlice'
 
 export const useWebSocket = () => {
   const dispatch = useDispatch()
 
-  const { isAuthenticated } = useSelector((state) => state.auth)
+  const { isAuthenticated } = useSelector(state => state.auth)
 
   const socketRef = useRef(null)
 
@@ -38,19 +34,19 @@ export const useWebSocket = () => {
       dispatch(setConnectionStatus(true))
     })
 
-    socket.on('disconnect', (reason) => {
+    socket.on('disconnect', reason => {
       console.log('❌ WebSocket disconnected:', reason)
 
       dispatch(setConnectionStatus(false))
     })
 
-    socket.on('newMessage', (message) => {
+    socket.on('newMessage', message => {
       console.log('📨 message from server:', message)
 
       dispatch(addMessage(message))
     })
 
-    socket.on('newChannel', (channel) => {
+    socket.on('newChannel', channel => {
       dispatch(addChannel(channel))
     })
 
@@ -62,7 +58,7 @@ export const useWebSocket = () => {
       dispatch(renameChannelWS({ id, name }))
     })
 
-    socket.on('connect_error', (error) => {
+    socket.on('connect_error', error => {
       console.error('🔌 Socket error:', error)
 
       dispatch(setConnectionStatus(false))

@@ -1,21 +1,21 @@
-import { useDispatch, useSelector } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { Modal, Button, Alert } from 'react-bootstrap';
-import { deleteChannel } from '../../slices/channelsSlice';
+import { useDispatch, useSelector } from 'react-redux'
+import { useTranslation } from 'react-i18next'
+import { Modal, Button, Alert } from 'react-bootstrap'
+import { deleteChannel } from '../../slices/channelsSlice'
 
 const DeleteChannelModal = ({ show, onHide, channelId, channelName }) => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const { loading, error } = useSelector((state) => state.channels);
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const { loading, error } = useSelector(state => state.channels)
 
   const handleDelete = async () => {
     try {
-      await dispatch(deleteChannel(channelId)).unwrap();
-      onHide();
+      await dispatch(deleteChannel(channelId)).unwrap()
+      onHide()
     } catch (error) {
-      console.error('Failed to delete channel:', error);
+      console.error('Failed to delete channel:', error)
     }
-  };
+  }
 
   return (
     <Modal show={show} onHide={onHide} centered animation={false}>
@@ -42,7 +42,7 @@ const DeleteChannelModal = ({ show, onHide, channelId, channelName }) => {
         </Button>
       </Modal.Footer>
     </Modal>
-  );
-};
+  )
+}
 
-export default DeleteChannelModal;
+export default DeleteChannelModal

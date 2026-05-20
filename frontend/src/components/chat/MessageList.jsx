@@ -3,14 +3,12 @@ import { useEffect, useRef } from 'react'
 import { ListGroup } from 'react-bootstrap'
 
 const MessageList = () => {
-  const { messages } = useSelector((state) => state.messages)
-  const { currentChannelId, channels } = useSelector((state) => state.channels)
+  const { messages } = useSelector(state => state.messages)
+  const { currentChannelId, channels } = useSelector(state => state.channels)
   const messagesEndRef = useRef(null)
 
-  const currentChannel = channels.find((ch) => ch.id === currentChannelId)
-  const currentMessages = messages.filter(
-    (msg) => msg.channelId === currentChannelId,
-  )
+  const currentChannel = channels.find(ch => ch.id === currentChannelId)
+  const currentMessages = messages.filter(msg => msg.channelId === currentChannelId)
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -25,11 +23,9 @@ const MessageList = () => {
       </div>
       <ListGroup variant="flush" className="flex-grow-1 overflow-auto p-3">
         {currentMessages.length === 0 && (
-          <div className="text-center text-muted mt-5">
-            Нет сообщений. Будьте первым!
-          </div>
+          <div className="text-center text-muted mt-5">Нет сообщений. Будьте первым!</div>
         )}
-        {currentMessages.map((message) => (
+        {currentMessages.map(message => (
           <ListGroup.Item key={message.id} className="border-0 px-0">
             <strong className="me-2">{message.username || 'Anonymous'}</strong>
             <span className="text-muted small">
@@ -47,4 +43,3 @@ const MessageList = () => {
 }
 
 export default MessageList
-

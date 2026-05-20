@@ -1,20 +1,20 @@
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { Navbar, Nav, Button, Badge } from 'react-bootstrap';
-import { useTranslation } from 'react-i18next';
-import { logout } from '../store/authSlice';
+import { useSelector, useDispatch } from 'react-redux'
+import { Link, useNavigate } from 'react-router-dom'
+import { Navbar, Nav, Button, Badge } from 'react-bootstrap'
+import { useTranslation } from 'react-i18next'
+import { logout } from '../store/authSlice'
 
 const Header = () => {
-  const { t } = useTranslation();
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-  const { isAuthenticated } = useSelector((state) => state.auth);
-  const { isConnected } = useSelector((state) => state.messages);
+  const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+  const { isAuthenticated } = useSelector(state => state.auth)
+  const { isConnected } = useSelector(state => state.messages)
 
   const handleLogout = () => {
-    dispatch(logout());
-    navigate('/login');
-  };
+    dispatch(logout())
+    navigate('/login')
+  }
 
   return (
     <Navbar bg="dark" variant="dark" className="mb-4">
@@ -41,7 +41,7 @@ const Header = () => {
         )}
       </Nav>
     </Navbar>
-  );
-};
+  )
+}
 
-export default Header;
+export default Header

@@ -1,20 +1,20 @@
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Form, Button, InputGroup } from 'react-bootstrap';
+import { Form, Button, InputGroup } from 'react-bootstrap'
 import { messagesAPI } from '../../services/api'
 
 const MessageForm = () => {
   const [message, setMessage] = useState('')
   const [sending, setSending] = useState(false)
 
-  const { currentChannelId } = useSelector((state) => state.channels)
+  const { currentChannelId } = useSelector(state => state.channels)
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async e => {
+    e.preventDefault()
 
-    if (!message.trim() || sending) return;
+    if (!message.trim() || sending) return
 
-    setSending(true);
+    setSending(true)
 
     try {
       await messagesAPI.sendMessage({
@@ -38,7 +38,7 @@ const MessageForm = () => {
           <Form.Control
             aria-label="Новое сообщение"
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={e => setMessage(e.target.value)}
             placeholder="Введите сообщение..."
             disabled={sending}
           />
@@ -51,4 +51,4 @@ const MessageForm = () => {
   )
 }
 
-export default MessageForm;
+export default MessageForm
