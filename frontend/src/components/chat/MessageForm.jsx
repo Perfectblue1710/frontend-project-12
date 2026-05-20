@@ -22,11 +22,11 @@ const handleSubmit = async (e) => {
   setSending(true);
 
   try {
-    await messagesAPI.sendMessage({
-      channelId: currentChannelId,
-      body: message.trim(),
-      username: localStorage.getItem('username'),
-    });
+  await messagesAPI.sendMessage({
+  body: message.trim(),
+  channelId: currentChannelId,
+  username: localStorage.getItem('username'),
+});
 
     setMessage('');
   } catch (error) {

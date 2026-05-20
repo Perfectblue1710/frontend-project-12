@@ -29,9 +29,9 @@ const Signup = () => {
 const handleSubmit = async (values, { setSubmitting, setFieldError }) => {
   try {
     const response = await authAPI.signup(values.username, values.password);
-    const { token } = response.data;
-    localStorage.setItem('username', values.username);
-dispatch(setToken(token));
+const { token } = response.data;
+localStorage.setItem('username', values.username);
+dispatch(setCredentials(token));
 await dispatch(fetchChannels()).unwrap();
 navigate('/');
 

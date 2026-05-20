@@ -34,9 +34,9 @@ const Login = () => {
 const handleSubmit = async (values, { setSubmitting }) => {
   try {
     const response = await authAPI.login(values.username, values.password);
-    const { token } = response.data;
-    localStorage.setItem('username', values.username);
-    dispatch(setToken(token));
+const { token } = response.data;
+localStorage.setItem('username', values.username);
+dispatch(setCredentials(token));
     navigate('/'); 
     } catch (err) {
       console.error('Login error:', err);
