@@ -9,7 +9,7 @@ const MessageForm = () => {
 
   const { currentChannelId } = useSelector(state => state.channels)
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
 
     if (!message.trim() || sending) return
@@ -24,9 +24,11 @@ const MessageForm = () => {
       })
 
       setMessage('')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to send message:', error)
-    } finally {
+    }
+    finally {
       setSending(false)
     }
   }

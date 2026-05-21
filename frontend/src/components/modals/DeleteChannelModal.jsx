@@ -12,7 +12,8 @@ const DeleteChannelModal = ({ show, onHide, channelId, channelName }) => {
     try {
       await dispatch(deleteChannel(channelId)).unwrap()
       onHide()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to delete channel:', error)
     }
   }
@@ -29,7 +30,10 @@ const DeleteChannelModal = ({ show, onHide, channelId, channelName }) => {
           </Alert>
         )}
         <p>
-          {t('chat.deleteConfirmation')} <strong>#{channelName}</strong>?
+          {t('chat.deleteConfirmation')}
+          {' '}
+          <strong>#{channelName}</strong>
+          ?
         </p>
         <p className="text-danger">{t('chat.deleteWarning')}</p>
       </Modal.Body>

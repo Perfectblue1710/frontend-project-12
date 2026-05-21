@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useTranslation } from 'react-i18next'
 import { Modal, Form, Button } from 'react-bootstrap'
-import { Formik, Field, ErrorMessage } from 'formik'
+import { Formik, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import { renameChannel } from '../../slices/channelsSlice'
 
@@ -24,7 +24,7 @@ const RenameChannelModal = ({ show, onHide, channelId, currentName }) => {
       .max(20, t('errors.usernameLength'))
       .notOneOf(
         channels.filter(ch => ch.id !== channelId).map(ch => ch.name),
-        t('errors.channelExists')
+        t('errors.channelExists'),
       )
       .required(t('errors.required')),
   })
@@ -33,9 +33,11 @@ const RenameChannelModal = ({ show, onHide, channelId, currentName }) => {
     try {
       await dispatch(renameChannel({ id: channelId, name: values.name })).unwrap()
       onHide()
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Failed to rename channel:', error)
-    } finally {
+    }
+    finally {
       setSubmitting(false)
     }
   }

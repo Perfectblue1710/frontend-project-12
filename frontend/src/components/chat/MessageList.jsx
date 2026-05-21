@@ -19,7 +19,11 @@ const MessageList = () => {
   return (
     <div className="h-100 d-flex flex-column">
       <div className="p-3 border-bottom">
-        <h4 className="mb-0"># {currentChannel.name}</h4>
+        <h4 className="mb-0">
+          #
+          {' '}
+          {currentChannel.name}
+        </h4>
       </div>
       <ListGroup variant="flush" className="flex-grow-1 overflow-auto p-3">
         {currentMessages.length === 0 && (

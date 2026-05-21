@@ -70,7 +70,7 @@ const channelsSlice = createSlice({
     setCurrentChannel: (state, action) => {
       state.currentChannelId = action.payload
     },
-    clearError: state => {
+    clearError: (state) => {
       state.error = null
     },
     addChannel: (state, action) => {
@@ -94,9 +94,9 @@ const channelsSlice = createSlice({
       }
     },
   },
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchChannels.pending, state => {
+      .addCase(fetchChannels.pending, (state) => {
         state.loading = state.channels.length === 0
         state.error = null
       })
@@ -112,7 +112,7 @@ const channelsSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
-      .addCase(createChannel.pending, state => {
+      .addCase(createChannel.pending, (state) => {
         state.loading = true
         state.error = null
       })
@@ -127,7 +127,7 @@ const channelsSlice = createSlice({
         state.error = action.payload
         console.error('Create channel rejected:', action.payload)
       })
-      .addCase(renameChannel.pending, state => {
+      .addCase(renameChannel.pending, (state) => {
         state.loading = true
         state.error = null
       })
@@ -143,7 +143,7 @@ const channelsSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
-      .addCase(deleteChannel.pending, state => {
+      .addCase(deleteChannel.pending, (state) => {
         state.loading = true
         state.error = null
       })
@@ -162,7 +162,6 @@ const channelsSlice = createSlice({
   },
 })
 
-export const { setCurrentChannel, clearError, addChannel, removeChannel, renameChannelWS } =
-  channelsSlice.actions
+export const { setCurrentChannel, clearError, addChannel, removeChannel, renameChannelWS }
+  = channelsSlice.actions
 export default channelsSlice.reducer
-

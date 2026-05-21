@@ -33,7 +33,7 @@ const ChannelList = () => {
       .max(20, 'От 3 до 20 символов')
       .notOneOf(
         channels.map(ch => ch.name),
-        'Канал с таким именем уже существует'
+        'Канал с таким именем уже существует',
       )
       .required('Обязательное поле'),
   })
@@ -44,7 +44,7 @@ const ChannelList = () => {
       .max(20, 'От 3 до 20 символов')
       .notOneOf(
         channels.filter(ch => ch.id !== selectedChannel?.id).map(ch => ch.name),
-        'Канал с таким именем уже существует'
+        'Канал с таким именем уже существует',
       )
       .required('Обязательное поле'),
   })
@@ -233,7 +233,10 @@ const ChannelList = () => {
         </Modal.Header>
         <Modal.Body>
           <p>
-            Вы уверены, что хотите удалить канал <strong>#{selectedChannel?.name}</strong>?
+            Вы уверены, что хотите удалить канал
+            {' '}
+            <strong>#{selectedChannel?.name}</strong>
+            ?
           </p>
           <p className="text-danger">Все сообщения в этом канале будут безвозвратно удалены.</p>
         </Modal.Body>

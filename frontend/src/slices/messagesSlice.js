@@ -26,13 +26,20 @@ const messagesSlice = createSlice({
     setConnectionStatus: (state, action) => {
       state.isConnected = action.payload
     },
-    clearMessages: state => {
+    clearMessages: (state) => {
       state.messages = []
     },
   },
 })
 
-export const { setMessages, addMessage, setLoading, setError, setConnectionStatus, clearMessages } =
-  messagesSlice.actions
+export const {
+  setMessages,
+  addMessage,
+  setLoading,
+  setError,
+  setConnectionStatus,
+  clearMessages,
+}
+  = messagesSlice.actions
 
 export default messagesSlice.reducer

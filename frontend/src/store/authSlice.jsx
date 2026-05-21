@@ -20,7 +20,7 @@ const authSlice = createSlice({
       localStorage.setItem('token', action.payload)
     },
 
-    logout: state => {
+    logout: (state) => {
       state.token = null
       state.isAuthenticated = false
 
@@ -32,7 +32,7 @@ const authSlice = createSlice({
       state.error = action.payload
     },
 
-    clearError: state => {
+    clearError: (state) => {
       state.error = null
     },
 

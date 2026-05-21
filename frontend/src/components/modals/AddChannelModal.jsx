@@ -27,10 +27,10 @@ const AddChannelModal = ({ show, onHide }) => {
       .max(20, t('errors.usernameLength'))
       .notOneOf(
         channels.map(ch => ch.name),
-        t('errors.channelExists')
+        t('errors.channelExists'),
       )
       .required(t('errors.required'))
-      .test('profanity', 'Название содержит нецензурные слова', value => {
+      .test('profanity', 'Название содержит нецензурные слова', (value) => {
         if (!value) return true
         return !containsProfanity(value)
       }),
@@ -55,10 +55,12 @@ const AddChannelModal = ({ show, onHide }) => {
       await dispatch(createChannel(channelName)).unwrap()
       resetForm()
       onHide()
-    } catch (err) {
+    }
+    catch (err) {
       console.error(err)
       if (err.response?.data?.message) setFieldError('name', err.response.data.message)
-    } finally {
+    }
+    finally {
       setSubmitting(false)
       setProfanityWarning(false)
     }
@@ -123,4 +125,3 @@ const AddChannelModal = ({ show, onHide }) => {
 }
 
 export default AddChannelModal
-
