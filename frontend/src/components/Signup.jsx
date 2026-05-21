@@ -31,17 +31,20 @@ const Signup = () => {
       dispatch(setToken(token))
       await dispatch(fetchChannels()).unwrap()
       navigate('/')
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Signup error:', error)
 
       if (error.response && error.response.status === 409) {
         const errorMsg = 'Такой пользователь уже существует'
         setServerError(errorMsg)
         setFieldError('username', errorMsg)
-      } else {
+      }
+      else {
         setServerError('Ошибка сервера. Попробуйте позже.')
       }
-    } finally {
+    }
+    finally {
       setSubmitting(false)
     }
   }

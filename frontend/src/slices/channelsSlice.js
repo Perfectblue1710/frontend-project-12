@@ -11,7 +11,7 @@ export const fetchChannels = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message)
     }
-  }
+  },
 )
 
 export const createChannel = createAsyncThunk(
@@ -28,7 +28,7 @@ export const createChannel = createAsyncThunk(
       console.error('Create channel error:', error)
       return rejectWithValue(error.response?.data || error.message)
     }
-  }
+  },
 )
 
 export const renameChannel = createAsyncThunk(
@@ -41,7 +41,7 @@ export const renameChannel = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message)
     }
-  }
+  },
 )
 
 export const deleteChannel = createAsyncThunk(
@@ -53,7 +53,7 @@ export const deleteChannel = createAsyncThunk(
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message)
     }
-  }
+  },
 )
 
 const initialState = {

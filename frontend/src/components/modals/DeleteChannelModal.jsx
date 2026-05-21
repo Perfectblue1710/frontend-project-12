@@ -32,7 +32,10 @@ const DeleteChannelModal = ({ show, onHide, channelId, channelName }) => {
         <p>
           {t('chat.deleteConfirmation')}
           {' '}
-          <strong>#{channelName}</strong>
+          <strong>
+            #
+            {channelName}
+          </strong>
           ?
         </p>
         <p className="text-danger">{t('chat.deleteWarning')}</p>

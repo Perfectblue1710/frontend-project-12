@@ -23,7 +23,8 @@ const ChannelList = () => {
 
   if (!displayChannels || displayChannels.length === 0) {
     displayChannels = [{ id: 1, name: 'general' }]
-  } else if (!displayChannels.some(ch => ch.name === 'general')) {
+  }
+  else if (!displayChannels.some(ch => ch.name === 'general')) {
     displayChannels = [{ id: 1, name: 'general' }, ...displayChannels]
   }
 
@@ -55,9 +56,11 @@ const ChannelList = () => {
       toast.success('Канал создан')
       resetForm()
       setShowAddModal(false)
-    } catch {
+    }
+    catch {
       toast.error('Ошибка при создании канала')
-    } finally {
+    }
+    finally {
       setSubmitting(false)
     }
   }
@@ -68,9 +71,11 @@ const ChannelList = () => {
       toast.success('Канал переименован')
       setShowRenameModal(false)
       setSelectedChannel(null)
-    } catch {
+    }
+    catch {
       toast.error('Ошибка при переименовании')
-    } finally {
+    }
+    finally {
       setSubmitting(false)
     }
   }
@@ -81,7 +86,8 @@ const ChannelList = () => {
       toast.success('Канал удалён')
       setShowDeleteModal(false)
       setSelectedChannel(null)
-    } catch {
+    }
+    catch {
       toast.error('Ошибка при удалении')
     }
   }
@@ -106,7 +112,9 @@ const ChannelList = () => {
               onClick={() => dispatch(setCurrentChannel(channel.id))}
               style={{ padding: '0.75rem 1rem' }}
             >
-              # {channel.name}
+              #
+              {' '}
+              {channel.name}
             </button>
 
             {channel.id !== 1 && (
@@ -117,7 +125,8 @@ const ChannelList = () => {
                   className="rounded-0"
                   style={{ padding: '0.75rem 0.5rem' }}
                 >
-                  <span className="visually-hidden">Управление каналом</span>⋮
+                  <span className="visually-hidden">Управление каналом</span>
+                  ⋮
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                   <Dropdown.Item
@@ -235,7 +244,10 @@ const ChannelList = () => {
           <p>
             Вы уверены, что хотите удалить канал
             {' '}
-            <strong>#{selectedChannel?.name}</strong>
+            <strong>
+              #
+              {selectedChannel?.name}
+            </strong>
             ?
           </p>
           <p className="text-danger">Все сообщения в этом канале будут безвозвратно удалены.</p>

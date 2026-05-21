@@ -37,7 +37,8 @@ const ChatPage = () => {
     const loadChannels = async () => {
       try {
         await dispatch(fetchChannels()).unwrap()
-      } catch (error) {
+      }
+      catch (error) {
         console.error('Failed to load channels:', error)
         toast.error(t('toasts.loadError'))
         if (error.response?.status === 401) {

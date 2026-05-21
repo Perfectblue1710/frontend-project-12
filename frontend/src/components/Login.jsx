@@ -26,16 +26,19 @@ const Login = () => {
       localStorage.setItem('username', values.username)
       dispatch(setToken(token))
       navigate('/')
-    } catch (err) {
+    }
+    catch (err) {
       console.error('Login error:', err)
       if (err.response && err.response.status === 401) {
         dispatch(setError('Неверные имя пользователя или пароль'))
-      } else {
+      }
+      else {
         const errorMsg = 'Ошибка сервера. Попробуйте позже.'
         dispatch(setError(errorMsg))
         toast.error(errorMsg)
       }
-    } finally {
+    }
+    finally {
       dispatch(setLoading(false))
       setSubmitting(false)
     }
