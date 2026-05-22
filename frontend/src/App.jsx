@@ -96,9 +96,11 @@ function App() {
           <Route
             path="/"
             element={
-              (<ProtectedRoute>
-                <ChatPage />
-              </ProtectedRoute>)
+              (
+                <ProtectedRoute>
+                  <ChatPage />
+                </ProtectedRoute>
+              )
             }
           />
           <Route path="/login" element={<Login />} />
