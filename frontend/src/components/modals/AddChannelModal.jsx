@@ -42,7 +42,7 @@ const AddChannelModal = ({ show, onHide }) => {
       const filtered = filterProfanity(channelName, '*')
       setProfanityWarning(true)
       const ok = window.confirm(
-        `Название содержит нецензурные слова.\nОтфильтрованный вариант: "${filtered}"\nСоздать канал?`
+        `Название содержит нецензурные слова.\nОтфильтрованный вариант: "${filtered}"\nСоздать канал?`,
       )
       if (!ok) {
         setSubmitting(false)

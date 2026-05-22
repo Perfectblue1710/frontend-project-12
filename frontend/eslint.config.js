@@ -23,15 +23,7 @@ export default defineConfig([
       },
     },
     rules: {
-  'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
-  '@stylistic/brace-style': 'off',
-  '@stylistic/comma-dangle': 'off',
-  '@stylistic/eol-last': 'off',
-  '@stylistic/jsx-wrap-multilines': 'off',
-  '@stylistic/jsx-closing-tag-location': 'off',
-  '@stylistic/operator-linebreak': 'off',
-  '@stylistic/jsx-one-expression-per-line': 'off',
-  '@stylistic/arrow-parens': 'off',
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
 ])
