@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+const token = localStorage.getItem('token')
+
 const initialState = {
-  token: localStorage.getItem('token'),
-  isAuthenticated: !!localStorage.getItem('token'),
+  token,
+  isAuthenticated: !!token,
   error: null,
   loading: false,
 }
@@ -13,44 +15,33 @@ const authSlice = createSlice({
   reducers: {
     setToken: (state, action) => {
       state.token = action.payload
-      state.isAuthenticated = !!action.payload
+      state.isAuthenticated = true
 
-      if (action.payload) {
-        localStorage.setItem('token', action.payload)
-      }
-      else {
-        localStorage.removeItem('token')
-      }
+      localStorage.setItem('token', action.payload)
+    },
+
+    logout: (state) => {
+      state.token = null
+      state.isAuthenticated = false
+
+      localStorage.removeItem('token')
+      localStorage.removeItem('username')
     },
 
     setError: (state, action) => {
       state.error = action.payload
     },
 
-    setLoading: (state, action) => {
-      state.loading = action.payload
-    },
-
-    logout: (state) => {
-      state.token = null
-      state.isAuthenticated = false
-      state.error = null
-
-      localStorage.removeItem('token')
-    },
-
     clearError: (state) => {
       state.error = null
+    },
+
+    setLoading: (state, action) => {
+      state.loading = action.payload
     },
   },
 })
 
-export const {
-  setToken,
-  setError,
-  setLoading,
-  logout,
-  clearError,
-} = authSlice.actions
+export const { setToken, logout, setError, clearError, setLoading } = authSlice.actions
 
 export default authSlice.reducer

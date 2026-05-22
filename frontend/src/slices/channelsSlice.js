@@ -8,7 +8,8 @@ export const fetchChannels = createAsyncThunk(
     try {
       const response = await channelsAPI.getChannels()
       return response.data
-    } catch (error) {
+    }
+    catch (error) {
       return rejectWithValue(error.response?.data || error.message)
     }
   },
@@ -24,7 +25,8 @@ export const createChannel = createAsyncThunk(
       const response = await channelsAPI.createChannel(filteredName)
       console.log('Channel created:', response.data)
       return response.data
-    } catch (error) {
+    }
+    catch (error) {
       console.error('Create channel error:', error)
       return rejectWithValue(error.response?.data || error.message)
     }
@@ -38,7 +40,8 @@ export const renameChannel = createAsyncThunk(
       const filteredName = filterProfanity(name)
       const response = await channelsAPI.renameChannel(id, filteredName)
       return response.data
-    } catch (error) {
+    }
+    catch (error) {
       return rejectWithValue(error.response?.data || error.message)
     }
   },
@@ -50,7 +53,8 @@ export const deleteChannel = createAsyncThunk(
     try {
       await channelsAPI.deleteChannel(id)
       return id
-    } catch (error) {
+    }
+    catch (error) {
       return rejectWithValue(error.response?.data || error.message)
     }
   },
@@ -162,6 +166,6 @@ const channelsSlice = createSlice({
   },
 })
 
-export const { setCurrentChannel, clearError, addChannel, removeChannel, renameChannelWS }
-  = channelsSlice.actions
+export const { setCurrentChannel, clearError, addChannel, removeChannel, renameChannelWS } =
+  channelsSlice.actions
 export default channelsSlice.reducer

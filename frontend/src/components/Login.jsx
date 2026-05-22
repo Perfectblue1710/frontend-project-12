@@ -3,28 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { Formik, Form, Field } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
-import {
-  Alert,
-  Button,
-  Container,
-  Row,
-  Col,
-  Form as BootstrapForm,
-} from 'react-bootstrap'
+import { Alert, Button, Container, Row, Col, Form as BootstrapForm } from 'react-bootstrap'
 
-import {
-  setToken,
-  setError,
-  setLoading,
-  clearError,
-} from '../store/authSlice'
+import { setToken, setError, setLoading, clearError } from '../store/authSlice'
 
 import { authAPI } from '../services/api'
 
 const Login = () => {
   const navigate = useNavigate()
   const dispatch = useDispatch()
-
   const { error, loading } = useSelector(state => state.auth)
 
   const validationSchema = Yup.object({
@@ -34,31 +21,19 @@ const Login = () => {
 
   const handleSubmit = async (values, { setSubmitting }) => {
     try {
-      dispatch(setLoading(true))
-      dispatch(clearError())
-
-      const response = await authAPI.login(
-        values.username,
-        values.password,
-      )
-
+      const response = await authAPI.login(values.username, values.password)
       const { token } = response.data
-
       localStorage.setItem('username', values.username)
-
       dispatch(setToken(token))
-
       navigate('/')
     }
     catch (err) {
       console.error('Login error:', err)
-
       if (err.response && err.response.status === 401) {
         dispatch(setError('Неверные имя пользователя или пароль'))
       }
       else {
         const errorMsg = 'Ошибка сервера. Попробуйте позже.'
-
         dispatch(setError(errorMsg))
         toast.error(errorMsg)
       }
@@ -77,11 +52,7 @@ const Login = () => {
             <h2 className="text-center mb-4">Вход в чат</h2>
 
             {error && (
-              <Alert
-                variant="danger"
-                onClose={() => dispatch(clearError())}
-                dismissible
-              >
+              <Alert variant="danger" onClose={() => dispatch(clearError())} dismissible>
                 {error}
               </Alert>
             )}
@@ -91,76 +62,46 @@ const Login = () => {
               validationSchema={validationSchema}
               onSubmit={handleSubmit}
             >
-              {({
-                isSubmitting,
-                errors,
-                touched,
-                handleChange,
-                handleBlur,
-              }) => (
+              {({ isSubmitting, errors, touched, handleChange, handleBlur }) => (
                 <Form>
-                  <BootstrapForm.Group
-                    className="mb-3"
-                    controlId="login-username"
-                  >
-                    <BootstrapForm.Label>
-                      Ваш ник
-                    </BootstrapForm.Label>
-
+                  <BootstrapForm.Group className="mb-3" controlId="login-username">
+                    <BootstrapForm.Label>Ваш ник</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="text"
                       name="username"
                       placeholder="Введите имя пользователя"
-                      isInvalid={
-                        errors.username && touched.username
-                      }
+                      isInvalid={errors.username && touched.username}
                       disabled={loading}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-
                     {errors.username && touched.username && (
                       <div
                         className="text-danger"
-                        style={{
-                          fontSize: '0.875em',
-                          marginTop: '0.25rem',
-                        }}
+                        style={{ fontSize: '0.875em', marginTop: '0.25rem' }}
                       >
                         {errors.username}
                       </div>
                     )}
                   </BootstrapForm.Group>
 
-                  <BootstrapForm.Group
-                    className="mb-3"
-                    controlId="login-password"
-                  >
-                    <BootstrapForm.Label>
-                      Пароль
-                    </BootstrapForm.Label>
-
+                  <BootstrapForm.Group className="mb-3" controlId="login-password">
+                    <BootstrapForm.Label>Пароль</BootstrapForm.Label>
                     <Field
                       as={BootstrapForm.Control}
                       type="password"
                       name="password"
                       placeholder="Введите пароль"
-                      isInvalid={
-                        errors.password && touched.password
-                      }
+                      isInvalid={errors.password && touched.password}
                       disabled={loading}
                       onChange={handleChange}
                       onBlur={handleBlur}
                     />
-
                     {errors.password && touched.password && (
                       <div
                         className="text-danger"
-                        style={{
-                          fontSize: '0.875em',
-                          marginTop: '0.25rem',
-                        }}
+                        style={{ fontSize: '0.875em', marginTop: '0.25rem' }}
                       >
                         {errors.password}
                       </div>
@@ -176,16 +117,13 @@ const Login = () => {
                     {loading ? 'Вход...' : 'Войти'}
                   </Button>
 
+                  {/* ССЫЛКА НА РЕГИСТРАЦИЮ */}
                   <div className="text-center">
-                    <Link to="/signup">
-                      Регистрация
-                    </Link>
+                    <Link to="/signup">Регистрация</Link>
                   </div>
 
                   <div className="text-center mt-2 text-muted">
-                    <small>
-                      Тестовые данные: admin / admin
-                    </small>
+                    <small>Тестовые данные: admin / admin</small>
                   </div>
                 </Form>
               )}
