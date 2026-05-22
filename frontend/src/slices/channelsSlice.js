@@ -166,5 +166,5 @@ const channelsSlice = createSlice({
   },
 })
 
-export const { setCurrentChannel, clearError, addChannel, removeChannel, renameChannelWS } =  channelsSlice.actions
+export const { setCurrentChannel, clearError, addChannel, removeChannel, renameChannelWS } = channelsSlice.actions
 export default channelsSlice.reducer
