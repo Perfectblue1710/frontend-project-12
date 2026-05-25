@@ -14,7 +14,8 @@ const DeleteChannelModal = ({
 
     <Modal.Body>
       <p>
-        Вы уверены, что хотите удалить канал{' '}
+        Вы уверены, что хотите удалить канал
+        {' '}
         <strong>
           #
           {selectedChannel?.name}
