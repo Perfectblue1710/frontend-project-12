@@ -1,87 +1,71 @@
-import { useEffect, useRef } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useTranslation } from 'react-i18next'
-import { Modal, Form, Button } from 'react-bootstrap'
-import { Formik, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import { renameChannel } from '../../slices/channelsSlice'
+import { Modal, Button, Form } from 'react-bootstrap'
+import { Formik, Field, ErrorMessage } from 'formik'
 
-const RenameChannelModal = ({ show, onHide, channelId, currentName }) => {
-  const { t } = useTranslation()
-  const dispatch = useDispatch()
-  const { channels, loading } = useSelector(state => state.channels)
-  const inputRef = useRef(null)
+const RenameChannelModal = ({
+  show,
+  onHide,
+  onSubmit,
+  validationSchema,
+  loading,
+  selectedChannel,
+}) => (
+  <Modal show={show} onHide={onHide} centered>
+    <Modal.Header closeButton>
+      <Modal.Title>Переименовать канал</Modal.Title>
+    </Modal.Header>
 
-  useEffect(() => {
-    if (show && inputRef.current) {
-      setTimeout(() => inputRef.current?.focus(), 100)
-    }
-  }, [show])
-
-  const validationSchema = Yup.object({
-    name: Yup.string()
-      .min(3, t('errors.usernameLength'))
-      .max(20, t('errors.usernameLength'))
-      .notOneOf(
-        channels.filter(ch => ch.id !== channelId).map(ch => ch.name),
-        t('errors.channelExists'),
-      )
-      .required(t('errors.required')),
-  })
-
-  const handleSubmit = async (values, { setSubmitting }) => {
-    try {
-      await dispatch(renameChannel({ id: channelId, name: values.name })).unwrap()
-      onHide()
-    }
-    catch (error) {
-      console.error('Failed to rename channel:', error)
-    }
-    finally {
-      setSubmitting(false)
-    }
-  }
-
-  return (
-    <Modal show={show} onHide={onHide} centered animation={false}>
-      <Modal.Header closeButton>
-        <Modal.Title>{t('chat.renameChannel')}</Modal.Title>
-      </Modal.Header>
+    {selectedChannel && (
       <Formik
-        initialValues={{ name: currentName }}
+        initialValues={{ name: selectedChannel.name }}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={onSubmit}
       >
-        {({ handleSubmit, isSubmitting, values, setFieldValue }) => (
+        {({ handleSubmit, isSubmitting }) => (
           <Form onSubmit={handleSubmit}>
             <Modal.Body>
-              <Form.Group controlId="modal-rename-channel-name">
-                <Form.Label>{t('chat.channelName')}</Form.Label>
-                <Form.Control
+              <Form.Group>
+                <Form.Label htmlFor="rename-channel-name">
+                  Имя канала
+                </Form.Label>
+
+                <Field
+                  as={Form.Control}
+                  id="rename-channel-name"
                   type="text"
                   name="name"
-                  value={values.name}
-                  onChange={e => setFieldValue('name', e.target.value)}
-                  placeholder={t('chat.channelNamePlaceholder')}
+                  placeholder="Введите новое имя"
                   disabled={isSubmitting || loading}
-                  ref={inputRef}
+                  autoFocus
                 />
-                <ErrorMessage name="name" component={Form.Text} className="text-danger" />
+
+                <ErrorMessage
+                  name="name"
+                  component="div"
+                  className="text-danger"
+                />
               </Form.Group>
             </Modal.Body>
+
             <Modal.Footer>
-              <Button variant="secondary" onClick={onHide} disabled={isSubmitting || loading}>
-                {t('chat.cancel')}
+              <Button
+                variant="secondary"
+                onClick={onHide}
+              >
+                Отмена
               </Button>
-              <Button variant="primary" type="submit" disabled={isSubmitting || loading}>
-                {isSubmitting || loading ? t('chat.renaming') : t('chat.renameButton')}
+
+              <Button
+                type="submit"
+                disabled={isSubmitting || loading}
+              >
+                Переименовать
               </Button>
             </Modal.Footer>
           </Form>
         )}
       </Formik>
-    </Modal>
-  )
-}
+    )}
+  </Modal>
+)
 
 export default RenameChannelModal

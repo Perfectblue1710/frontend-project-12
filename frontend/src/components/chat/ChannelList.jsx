@@ -1,15 +1,33 @@
-import { useSelector, useDispatch } from 'react-redux'
-import { setCurrentChannel } from '../../slices/channelsSlice'
-import { ListGroup, Button, Dropdown, Modal, Form } from 'react-bootstrap'
 import { useState } from 'react'
-import { Formik, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import { createChannel, renameChannel, deleteChannel } from '../../slices/channelsSlice'
+import { useSelector, useDispatch } from 'react-redux'
+import { ListGroup, Button, Dropdown } from 'react-bootstrap'
 import { toast } from 'react-toastify'
+
+import {
+  setCurrentChannel,
+  createChannel,
+  renameChannel,
+  deleteChannel,
+} from '../../slices/channelsSlice'
+
+import {
+  getAddChannelSchema,
+  getRenameChannelSchema,
+} from '../../utils/channelsSchemas'
+
+import AddChannelModal from '../modals/AddChannelModal'
+import RenameChannelModal from '../modals/RenameChannelModal'
+import DeleteChannelModal from '../modals/DeleteChannelModal'
 
 const ChannelList = () => {
   const dispatch = useDispatch()
-  const { channels, currentChannelId, loading } = useSelector(state => state.channels)
+
+  const {
+    channels,
+    currentChannelId,
+    loading,
+  } = useSelector(state => state.channels)
+
   const { isAuthenticated } = useSelector(state => state.auth)
 
   const [showAddModal, setShowAddModal] = useState(false)
@@ -28,32 +46,22 @@ const ChannelList = () => {
     displayChannels = [{ id: 1, name: 'general' }, ...displayChannels]
   }
 
-  const addChannelSchema = Yup.object({
-    name: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf(
-        channels.map(ch => ch.name),
-        'Канал с таким именем уже существует',
-      )
-      .required('Обязательное поле'),
-  })
+  const addChannelSchema = getAddChannelSchema(channels)
 
-  const renameChannelSchema = Yup.object({
-    name: Yup.string()
-      .min(3, 'От 3 до 20 символов')
-      .max(20, 'От 3 до 20 символов')
-      .notOneOf(
-        channels.filter(ch => ch.id !== selectedChannel?.id).map(ch => ch.name),
-        'Канал с таким именем уже существует',
-      )
-      .required('Обязательное поле'),
-  })
+  const renameChannelSchema = getRenameChannelSchema(
+    channels,
+    selectedChannel,
+  )
 
-  const handleAddChannel = async (values, { resetForm, setSubmitting }) => {
+  const handleAddChannel = async (
+    values,
+    { resetForm, setSubmitting },
+  ) => {
     try {
       await dispatch(createChannel(values.name)).unwrap()
+
       toast.success('Канал создан')
+
       resetForm()
       setShowAddModal(false)
     }
@@ -65,10 +73,20 @@ const ChannelList = () => {
     }
   }
 
-  const handleRenameChannel = async (values, { setSubmitting }) => {
+  const handleRenameChannel = async (
+    values,
+    { setSubmitting },
+  ) => {
     try {
-      await dispatch(renameChannel({ id: selectedChannel.id, name: values.name })).unwrap()
+      await dispatch(
+        renameChannel({
+          id: selectedChannel.id,
+          name: values.name,
+        }),
+      ).unwrap()
+
       toast.success('Канал переименован')
+
       setShowRenameModal(false)
       setSelectedChannel(null)
     }
@@ -82,8 +100,12 @@ const ChannelList = () => {
 
   const handleDeleteChannel = async () => {
     try {
-      await dispatch(deleteChannel(selectedChannel.id)).unwrap()
+      await dispatch(
+        deleteChannel(selectedChannel.id),
+      ).unwrap()
+
       toast.success('Канал удалён')
+
       setShowDeleteModal(false)
       setSelectedChannel(null)
     }
@@ -96,18 +118,31 @@ const ChannelList = () => {
     <div className="h-100 d-flex flex-column">
       <div className="d-flex justify-content-between align-items-center p-3 border-bottom">
         <h5 className="mb-0">Каналы</h5>
-        <Button variant="outline-primary" size="sm" onClick={() => setShowAddModal(true)}>
+
+        <Button
+          variant="outline-primary"
+          size="sm"
+          onClick={() => setShowAddModal(true)}
+        >
           +
         </Button>
       </div>
 
-      <ListGroup variant="flush" className="flex-grow-1 overflow-auto">
+      <ListGroup
+        variant="flush"
+        className="flex-grow-1 overflow-auto"
+      >
         {displayChannels.map(channel => (
-          <div key={channel.id} className="d-flex align-items-stretch w-100">
+          <div
+            key={channel.id}
+            className="d-flex align-items-stretch w-100"
+          >
             <button
               type="button"
               className={`btn w-100 text-start rounded-0 ${
-                channel.id === currentChannelId ? 'btn-primary' : 'btn-light'
+                channel.id === currentChannelId
+                  ? 'btn-primary'
+                  : 'btn-light'
               }`}
               onClick={() => dispatch(setCurrentChannel(channel.id))}
               style={{ padding: '0.75rem 1rem' }}
@@ -125,9 +160,13 @@ const ChannelList = () => {
                   className="rounded-0"
                   style={{ padding: '0.75rem 0.5rem' }}
                 >
-                  <span className="visually-hidden">Управление каналом</span>
+                  <span className="visually-hidden">
+                    Управление каналом
+                  </span>
+
                   ⋮
                 </Dropdown.Toggle>
+
                 <Dropdown.Menu>
                   <Dropdown.Item
                     onClick={() => {
@@ -137,6 +176,7 @@ const ChannelList = () => {
                   >
                     Переименовать
                   </Dropdown.Item>
+
                   <Dropdown.Item
                     className="text-danger"
                     onClick={() => {
@@ -153,114 +193,30 @@ const ChannelList = () => {
         ))}
       </ListGroup>
 
-      {/* Модальное окно добавления канала */}
-      <Modal show={showAddModal} onHide={() => setShowAddModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Добавить канал</Modal.Title>
-        </Modal.Header>
-        <Formik
-          initialValues={{ name: '' }}
-          validationSchema={addChannelSchema}
-          onSubmit={handleAddChannel}
-        >
-          {({ handleSubmit, isSubmitting }) => (
-            <Form onSubmit={handleSubmit}>
-              <Modal.Body>
-                <Form.Group>
-                  <Form.Label htmlFor="channel-name">Имя канала</Form.Label>
-                  <Field
-                    as={Form.Control}
-                    id="channel-name"
-                    type="text"
-                    name="name"
-                    placeholder="Введите имя канала"
-                    disabled={isSubmitting || loading}
-                    autoFocus
-                  />
-                  <ErrorMessage name="name" component="div" className="text-danger" />
-                </Form.Group>
-              </Modal.Body>
-              <Modal.Footer>
-                <Button variant="secondary" onClick={() => setShowAddModal(false)}>
-                  Отмена
-                </Button>
-                <Button type="submit" disabled={isSubmitting || loading}>
-                  Добавить
-                </Button>
-              </Modal.Footer>
-            </Form>
-          )}
-        </Formik>
-      </Modal>
+      <AddChannelModal
+        show={showAddModal}
+        onHide={() => setShowAddModal(false)}
+        onSubmit={handleAddChannel}
+        validationSchema={addChannelSchema}
+        loading={loading}
+      />
 
-      {/* Модальное окно переименования канала */}
-      <Modal show={showRenameModal} onHide={() => setShowRenameModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Переименовать канал</Modal.Title>
-        </Modal.Header>
-        {selectedChannel && (
-          <Formik
-            initialValues={{ name: selectedChannel.name }}
-            validationSchema={renameChannelSchema}
-            onSubmit={handleRenameChannel}
-          >
-            {({ handleSubmit, isSubmitting }) => (
-              <Form onSubmit={handleSubmit}>
-                <Modal.Body>
-                  <Form.Group>
-                    <Form.Label htmlFor="rename-channel-name">Имя канала</Form.Label>
-                    <Field
-                      as={Form.Control}
-                      id="rename-channel-name"
-                      type="text"
-                      name="name"
-                      placeholder="Введите новое имя"
-                      disabled={isSubmitting || loading}
-                      autoFocus
-                    />
-                    <ErrorMessage name="name" component="div" className="text-danger" />
-                  </Form.Group>
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={() => setShowRenameModal(false)}>
-                    Отмена
-                  </Button>
-                  <Button type="submit" disabled={isSubmitting || loading}>
-                    Переименовать
-                  </Button>
-                </Modal.Footer>
-              </Form>
-            )}
-          </Formik>
-        )}
-      </Modal>
+      <RenameChannelModal
+        show={showRenameModal}
+        onHide={() => setShowRenameModal(false)}
+        onSubmit={handleRenameChannel}
+        validationSchema={renameChannelSchema}
+        loading={loading}
+        selectedChannel={selectedChannel}
+      />
 
-      {/* Модальное окно удаления канала */}
-      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Удалить канал</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <p>
-            Вы уверены, что хотите удалить канал
-            {' '}
-            <strong>
-              #
-              {selectedChannel?.name}
-            </strong>
-            ?
-          </p>
-          <p className="text-danger">Все сообщения в этом канале будут безвозвратно удалены.</p>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
-            Отмена
-          </Button>
-          <Button variant="danger" onClick={handleDeleteChannel} disabled={loading}>
-            Удалить
-          </Button>
-        </Modal.Footer>
-      </Modal>
+      <DeleteChannelModal
+        show={showDeleteModal}
+        onHide={() => setShowDeleteModal(false)}
+        onDelete={handleDeleteChannel}
+        loading={loading}
+        selectedChannel={selectedChannel}
+      />
     </div>
   )
 }

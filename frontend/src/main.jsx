@@ -5,7 +5,6 @@ import { store } from './store'
 import App from './App'
 import './i18n'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
